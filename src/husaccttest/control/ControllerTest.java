@@ -25,4 +25,10 @@ public class ControllerTest extends TestCase {
 		service.notifyLocaleListeners(Locale.ENGLISH);
 	}
 	
+	@Test
+	public void testDefaultLocale(){
+		ControlServiceImpl service = new ControlServiceImpl();
+		assertEquals(service.getLocale(), Locale.ENGLISH);
+	}
+	
 }
