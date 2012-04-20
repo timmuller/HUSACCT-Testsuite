@@ -67,9 +67,10 @@ public class ValidateTest {
 	{
 		CategoryDTO[] dtos = validate.getCategories();		
 		assertArrayEquals(new String[]{"legalityofdependency"}, getCategoryStringArray(dtos));	
-		assertArrayEquals(new String[]{"IsNotAllowedToUse", "IsOnlyAllowedToUse","IsOnlyModuleAllowedToUse","IsAllowedToUse", "MustUse","SkipCall","BackCall"}, getRuleTypesStringArray(dtos));
-
-
+		
+		final String [] currentRuletypes = new String[]{"IsNotAllowedToUse", "IsOnlyAllowedToUse","IsOnlyModuleAllowedToUse","IsAllowedToUse", "MustUse","SkipCall","BackCall"};
+		assertArrayEquals(currentRuletypes, getRuleTypesStringArray(dtos));
+		
 		DefineServiceImpl defineService = new DefineServiceImpl();	
 		if(defineService.getApplicationDetails().programmingLanguage != null){
 			if(defineService.getApplicationDetails().programmingLanguage.isEmpty()){
@@ -136,6 +137,7 @@ public class ValidateTest {
 		}
 	}
 	
+	@Test
 	public void testImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException {
 		ClassLoader.getSystemResource("husaccttest/validate/testfile.xml").toURI();
 		DocumentBuilderFactory domfactory = DocumentBuilderFactory.newInstance();
@@ -145,7 +147,8 @@ public class ValidateTest {
 		Document document = domBuilder.build(dombuilder.parse(file));
 		
 		validate.loadWorkspaceData(document.getRootElement());
-		
+		validate.getWorkspaceData();
+		System.out.println(validate.getViolations("", "").length);
 		
 	}
 	
