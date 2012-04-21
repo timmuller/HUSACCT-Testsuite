@@ -2,23 +2,8 @@ package husaccttest.validate;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import husacct.common.dto.CategoryDTO;
 import husacct.common.dto.RuleTypeDTO;
 import husacct.common.dto.ViolationTypeDTO;
@@ -32,10 +17,23 @@ import husacct.validate.domain.validation.Severity;
 import husacct.validate.domain.validation.Violation;
 import husacct.validate.domain.validation.logicalmodule.LogicalModules;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map.Entry;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
-import org.jdom2.output.XMLOutputter;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -119,6 +117,11 @@ public class ValidateTest {
 		}
 		return violationtypeList.toArray(new String[]{});
 	}
+	
+	@Test
+	public void isValidatedBeforeValidation(){
+		assertFalse(validate.isValidated());
+	}
 
 	@Test
 	public void getViolations()
@@ -127,6 +130,11 @@ public class ValidateTest {
 		assertEquals("domain.locationbased.foursquare.Account", validate.getViolations("DomainLayer", "Infrastructure")[0].getFromClasspath());
 		assertEquals("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", validate.getViolations("DomainLayer", "Infrastructure")[0].getToClasspath());
 		assertEquals("InvocConstructor", validate.getViolations("DomainLayer", "Infrastructure")[0].getViolationType().getKey());
+	}
+	
+	@Test
+	public void isValidatedAfterValidation(){
+		assertFalse(validate.isValidated());
 	}
 
 	@Ignore
