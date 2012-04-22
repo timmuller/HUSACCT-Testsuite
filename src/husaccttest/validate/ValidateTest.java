@@ -134,6 +134,7 @@ public class ValidateTest {
 	
 	@Test
 	public void isValidatedAfterValidation(){
+		validate.checkConformance();
 		assertFalse(validate.isValidated());
 	}
 
