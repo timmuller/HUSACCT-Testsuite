@@ -3,8 +3,11 @@ package husaccttest.analyse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import husacct.analyse.AnalyseServiceImpl;
+import husacct.analyse.IAnalyseService;
+import husacct.analyse.presentation.analyseController;
 import husacct.common.dto.AnalysedModuleDTO;
 import husacct.common.dto.DependencyDTO;
 import junit.framework.*;
@@ -18,81 +21,13 @@ public class TestDomein extends TestCase{
 		service = new AnalyseServiceImpl();
 	}
 	
-	public void testAvailableLanguages(){
-		String[] languages = service.getAvailableLanguages();
-		assertEquals("Java", languages[0]);
-		assertEquals("C#", languages[1]);
-	}
 
-	public void testGetModules(){
-		AnalysedModuleDTO[] modules = service.getRootModules();		
-		assertEquals(2, modules.length);
-		assertEquals("domain", modules[0].name);
-		assertEquals("infrastructure", modules[1].name);
-		assertEquals("domain", modules[0].uniqueName);
-		assertEquals("infrastructure", modules[1].uniqueName);
-		assertNull(modules[0].subModules);
-		assertNull(modules[1].subModules);
-	}
-	
-	public void testGetChildInModule(){
-		AnalysedModuleDTO[] modules = service.getChildModulesInModule("domain.locationbased");
-		assertEquals(2, modules.length);
-		assertEquals("domain.locationbased.latitude", modules[1].uniqueName);
-		assertEquals("domain.locationbased.foursquare", modules[0].uniqueName);
-		
-		
-		assertEquals("Account", modules[0].subModules.get(0).name);
-		assertEquals("domain.locationbased.foursquare.Account", modules[0].subModules.get(0).uniqueName);
-		
-		assertEquals("Friends", modules[0].subModules.get(1).name);
-		assertEquals("domain.locationbased.foursquare.Friends", modules[0].subModules.get(1).uniqueName);
-		
-		assertEquals("Map", modules[0].subModules.get(2).name);
-		assertEquals("domain.locationbased.foursquare.Map", modules[0].subModules.get(2).uniqueName);
-		
-		assertEquals("History", modules[0].subModules.get(3).name);
-		assertEquals("domain.locationbased.foursquare.History", modules[0].subModules.get(3).uniqueName);
-	}
-	
-	public void testGetChildModulesInDepth(){
-		AnalysedModuleDTO[] modules = service.getChildModulesInModule("domain.locationbased", 2);
-		
-		assertEquals("domain.locationbased.foursquare", modules[0].uniqueName);
-		assertEquals("domain.locationbased.foursquare.Account", modules[0].subModules.get(0).uniqueName);
-		assertNull(modules[0].subModules.get(0).subModules);
-		
-	}
-	
-	public void testGetParentModule(){
-		AnalysedModuleDTO module = service.getParentModuleForModule("domain.locationbased.foursquare");
-		
-		assertEquals("domain.locationbased", module.uniqueName);
-				
-	}
-		
-	public void testGetDependencyFrom(){
-		DependencyDTO[] dependencies = service.getDependency("domain.locationbased.foursquare.History", "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO");		
-		assertEquals(1, dependencies.length);
-	}
-
-	
-	public void testGetDependencyFromPackageLevel(){
-		DependencyDTO[] dependencies = service.getDependency("domain.locationbased.foursquare");		
-		assertEquals(4, dependencies.length);
-	}
-	
-	
-	
-
-	
-	
 	public void testGetDependencyFromAndToClasses(){
 		String fromPath = "domain.locationbased.foursquare.History";
 		String toPath = "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO";
 		int totalDependenciesExpected = 1;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath, toPath);
+		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
 		String fromPathExpected = fromPath;
@@ -104,7 +39,7 @@ public class TestDomein extends TestCase{
 				fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
 		
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
-		assertTrue(foundDependency);
+		assertEquals(true, foundDependency);
 	}
 	
 	public void testGetDependenciesFromAndToPackages(){
@@ -112,7 +47,7 @@ public class TestDomein extends TestCase{
 		String toPath = "infrastructure.socialmedia.locationbased.latitude";
 		int totalDependenciesExpected = 3;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath, toPath);
+		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
 		
@@ -149,9 +84,9 @@ public class TestDomein extends TestCase{
 		boolean foundAccountDependency = compaireDTOWithValues(expectedAccountDependency, dependencies);
 		boolean foundFriendsDependency = compaireDTOWithValues(expectedFriendsDependency, dependencies);
 		boolean foundMapDependency = compaireDTOWithValues(expectedMapDependency, dependencies);
-		assertTrue(foundAccountDependency);
-		assertTrue(foundFriendsDependency);
-		assertTrue(foundMapDependency);
+		assertEquals(true, foundAccountDependency);
+		assertEquals(true, foundFriendsDependency);
+		assertEquals(true, foundMapDependency);
 	}
 	
 	public void testGetDependenciesFromPackageToClass(){
@@ -159,7 +94,7 @@ public class TestDomein extends TestCase{
 		String toPath = "infrastructure.socialmedia.locationbased.latitude.IMap";
 		int totalDependenciesExpected = 1;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath, toPath);
+		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
@@ -170,7 +105,7 @@ public class TestDomein extends TestCase{
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
-		assertTrue(foundDependency);		
+		assertEquals(true, foundDependency);		
 	}
 	
 	public void testGetDependenciesFromAndToWithoutRelation(){
@@ -178,7 +113,7 @@ public class TestDomein extends TestCase{
 		String toPath = "infrastructure.socialmedia.locationbased.latitude.IMap";
 		int totalDependenciesExpected = 0;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath, toPath);
+		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		assertNotNull(dependencies);
 	}
@@ -188,7 +123,7 @@ public class TestDomein extends TestCase{
 		String toPath = "infrastructure.notexisting";
 		int totalDependenciesExpected = 0;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath, toPath);
+		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		assertNotNull(dependencies);
 	}
@@ -197,7 +132,7 @@ public class TestDomein extends TestCase{
 		String fromPath = "domain.locationbased.foursquare.Account";
 		int totalDependencies = 1;
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath);
+		DependencyDTO[] dependencies = service.getDependenciesFrom(fromPath);
 		assertEquals(totalDependencies, dependencies.length);
 		
 		String fromPathExpected = fromPath;
@@ -207,14 +142,76 @@ public class TestDomein extends TestCase{
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
-		assertTrue(foundDependency); 
+		assertEquals(true, foundDependency); 
+	}
+	
+	public void testGetDependenciesToClass(){
+		String toPath = "infrastructure.socialmedia.locationbased.foursquare.AccountDAO";
+		int totalDependencies = 1;
+		
+		DependencyDTO[] dependencies = service.getDependenciesTo(toPath);
+		assertEquals(totalDependencies, dependencies.length);
+		
+		String fromExpected = "domain.locationbased.foursquare.Account";
+		String toExpected = toPath;
+		String typeExpected = "InvocConstructor";
+		int lineExpected = 10;
+		
+		HashMap<String, Object> expectedDependency = createDependencyHashmap(
+				fromExpected, toExpected, typeExpected, lineExpected);
+		
+		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
+		assertEquals(true, foundDependency);
+	}
+	
+	public void testGetDependenciesToPackage(){
+		String toPath = "infrastructure.socialmedia.locationbased.latitude";
+		int totalDependenciesExpected = 3;
+				
+		DependencyDTO[] dependencies = service.getDependenciesTo(toPath);
+		assertEquals(totalDependenciesExpected, dependencies.length);
+		
+		String accountFromExpected = "domain.locationbased.latitude.Account";
+		String accountToExpected = toPath + ".AccountDAO";
+		String accountTypeExpected = "InvocConstructor";
+		int accountLineExpected = 11;
+		
+		String friendsFromExpected = "domain.locationbased.latitude.Friends";
+		String friendsToExpected = toPath + ".FriendsDAO";
+		String friendsTypeExpected = "Extends";
+		int friendsLineExpected = 10;
+		
+		String mapFromExpected  = "domain.locationbased.latitude.Map";
+		String mapToExpected = toPath + ".IMap";
+		String mapTypeExpected = "Implements";
+		int mapLineExpected = 10;
+		
+		HashMap<String, Object> accountDependency = createDependencyHashmap(accountFromExpected, accountToExpected, accountTypeExpected, accountLineExpected);
+		HashMap<String, Object> friendsDependency = createDependencyHashmap(friendsFromExpected, friendsToExpected, friendsTypeExpected, friendsLineExpected);
+		HashMap<String, Object> mapDependency = createDependencyHashmap(mapFromExpected, mapToExpected, mapTypeExpected, mapLineExpected);
+		
+		boolean foundAccount = compaireDTOWithValues(accountDependency, dependencies);
+		boolean foundFriends = compaireDTOWithValues(friendsDependency, dependencies);
+		boolean foundMap = compaireDTOWithValues(mapDependency, dependencies);
+		
+		assertEquals(true, foundAccount);
+		assertEquals(true, foundFriends);
+		assertEquals(true, foundMap);
+	}
+	
+	public void testGetDependencyToUnknown(){
+		String toPath = "infrastructure.unknown";
+		int totalExpected = 0;
+		
+		DependencyDTO[] dependencies = service.getDependenciesTo(toPath);
+		assertEquals(totalExpected, dependencies.length);
 	}
 	
 	public void testGetAllDependenciesOfPackage(){
 		String fromPath = "domain.locationbased.latitude";
 		int totalDependencies = 3;		
 		
-		DependencyDTO[] dependencies = service.getDependency(fromPath);
+		DependencyDTO[] dependencies = service.getDependenciesFrom(fromPath);
 		assertEquals(totalDependencies, dependencies.length);
 		
 		String accountFromPathExpected = fromPath + ".Account";
@@ -243,9 +240,9 @@ public class TestDomein extends TestCase{
 		boolean accountFoundDependency = compaireDTOWithValues(accountExpectedDependency, dependencies);
 		boolean friendsFoundDependency = compaireDTOWithValues(friendsExpectedDependency, dependencies);
 		boolean mapFoundDependency = compaireDTOWithValues(mapExpectedDependency, dependencies);
-		assertTrue(accountFoundDependency);
-		assertTrue(friendsFoundDependency);
-		assertTrue(mapFoundDependency);
+		assertEquals(true, accountFoundDependency);
+		assertEquals(true, friendsFoundDependency);
+		assertEquals(true, mapFoundDependency);
 	}
 	
 	public void testGetAvailableLanguages(){
@@ -253,8 +250,8 @@ public class TestDomein extends TestCase{
 		String[] availableLanguages = service.getAvailableLanguages();
 		
 		assertEquals(totalLanguagesExpected, availableLanguages.length);
-		assertTrue(itemExistInArray("Java", availableLanguages));
-		assertTrue(itemExistInArray("C#", availableLanguages));
+		assertEquals(true, itemExistInArray("Java", availableLanguages));
+		assertEquals(true, itemExistInArray("C#", availableLanguages));
 	}
 	
 	public void testGetRootModules(){
@@ -265,22 +262,268 @@ public class TestDomein extends TestCase{
 		
 		String domainNameExpected = "domain";
 		String domainUniqueNameExpected = "domain";
-		int domainSubmoduleCount = 1;
+		int domainSubmoduleCount = 0;
 		String domainTypeExpected = "package";
 		
-		HashMap<String, Object> accountExpectedDependency = createModuleHashmap(
+		String infrastructureNameExpected = "infrastructure";
+		String infrastructureUniqueNameExpected = "infrastructure";
+		int infrastructureSubmoduleCount = 0;
+		String infrastructureTypeExpected = "package";
+		
+		HashMap<String, Object> domainExpectedModule = createModuleHashmap(
 				domainNameExpected, domainUniqueNameExpected, domainSubmoduleCount, domainTypeExpected);
 		
-		boolean domainFoundModule = compaireDTOWithValues(accountExpectedDependency, modules);
-		assertTrue(domainFoundModule);
+		HashMap<String, Object> infrastructureExpectedModule = createModuleHashmap(
+				infrastructureNameExpected, infrastructureUniqueNameExpected, infrastructureSubmoduleCount, infrastructureTypeExpected);
+		
+		boolean domainFoundModule = compaireDTOWithValues(domainExpectedModule, modules);
+		boolean infrastructureFoundModule = compaireDTOWithValues(infrastructureExpectedModule, modules);
+		assertEquals(true, domainFoundModule);
+		assertEquals(true, infrastructureFoundModule);
+	}
+	
+	public void testGetChildrenOfPackageModule(){
+		int totalModulesExpected = 2;
+		String modulesFrom = "domain.locationbased";
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom);
+		assertEquals(totalModulesExpected, modules.length);
+		
+		String foursquareNameExpected = "foursquare";
+		String foursquareUniqueNameExpected = modulesFrom + ".foursquare";
+		int foursquareSubmodulesExpected = 4;
+		String foursquareTypeExpected = "package";
+		
+		String latitudeNameExpected = "latitude";
+		String latitudeUniqueNameExpected = modulesFrom + ".latitude";
+		int latitudeSubmodulesExpected = 3;
+		String latitudeTypeExpected = "package";
+		
+		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
+				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
+		HashMap<String, Object> latitudeExpectedModule = createModuleHashmap(
+				latitudeNameExpected, latitudeUniqueNameExpected, latitudeSubmodulesExpected, latitudeTypeExpected);
+		
+		boolean foursquareFoundModule = compaireDTOWithValues(foursquareExpectedModule, modules);
+		boolean latitudeFoundModule = compaireDTOWithValues(latitudeExpectedModule, modules);
+		assertEquals(true, foursquareFoundModule);
+		assertEquals(true, latitudeFoundModule);
+	}
+	
+	public void testGetChildrenOfClassModule(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.locationbased.foursquare.Account";
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom);
+		assertEquals(totalModulesExpected, modules.length);
+	}
+	
+	public void testGetChildrenOfNotExistingModule(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.notExisting";
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom);
+		assertEquals(totalModulesExpected, modules.length);
+	}
+	
+	public void testGetChilderenOfPackageWithDepthOne(){
+		int totalModulesExpected = 2;
+		String modulesFrom = "domain.locationbased";
+		int depth = 1;
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+		
+		String foursquareNameExpected = "foursquare";
+		String foursquareUniqueNameExpected = modulesFrom + "." + foursquareNameExpected;
+		int foursquareSubmodulesExpected = 0;
+		String foursquareTypeExpected = "package";
+		
+		String latitudeNameExpected = "latitude";
+		String latitudeUniqueNameExpected = modulesFrom + "." + latitudeNameExpected;
+		int latitudeSubmodulesExpected = 0;
+		String latitudeTypeExpected = "package";
+		
+		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
+		HashMap<String, Object> latitudeExpectedModule = createModuleHashmap(latitudeNameExpected, latitudeUniqueNameExpected, latitudeSubmodulesExpected, latitudeTypeExpected);
+		
+		boolean foundFoursquare = compaireDTOWithValues(foursquareExpectedModule, modules);
+		boolean foundLatitude = compaireDTOWithValues(latitudeExpectedModule, modules);
+		assertEquals(true, foundFoursquare);
+		assertEquals(true, foundLatitude);
+	}
+	
+	public void testGetChildrenOfPackageWithDepthTwo(){
+		int totalModulesExpected = 2;
+		String modulesFrom = "domain.locationbased";
+		int depth = 2;
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+		
+		String foursquareNameExpected = "foursquare";
+		String foursquareUniqueNameExpected = modulesFrom + "." + foursquareNameExpected;
+		int foursquareSubmodulesExpected = 4;
+		String foursquareTypeExpected = "package";
+		
+		String latitudeNameExpected = "latitude";
+		String latitudeUniqueNameExpected = modulesFrom + "." + latitudeNameExpected;
+		int latitudeSubmodulesExpected = 3;
+		String latitudeTypeExpected = "package";
+		
+		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
+				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
+		HashMap<String, Object> latitudeExpectedModule = createModuleHashmap(
+				latitudeNameExpected, latitudeUniqueNameExpected, latitudeSubmodulesExpected, latitudeTypeExpected);
+		
+		boolean foundFoursquare = compaireDTOWithValues(foursquareExpectedModule, modules);
+		boolean foundLatitude = compaireDTOWithValues(latitudeExpectedModule, modules);
+		assertEquals(true, foundFoursquare);
+		assertEquals(true, foundLatitude);
+	}
+	
+	public void testGetChildrenOfPackageDepthZero(){
+		int totalModulesExpected = 1;
+		String modulesFrom = "domain";
+		int depth = 0;
+		
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+		
+		String locationbasedNameExpected = "locationbased";
+		String locationbasedUniqueNameExpected = modulesFrom + "." + locationbasedNameExpected;
+		int locationbasedSubmodulesExpected = 2;
+		String locationbasedTypeExpected = "package";
+		
+		HashMap<String, Object> locationbasedExpectedModule = createModuleHashmap(
+				locationbasedNameExpected, locationbasedUniqueNameExpected, locationbasedSubmodulesExpected, locationbasedTypeExpected);
+		boolean foundLocationbased = compaireDTOWithValues(locationbasedExpectedModule, modules);
+		assertEquals(true, foundLocationbased);
 		
 		
+		List<AnalysedModuleDTO> submodules = modules[0].subModules;
+		int totalSubModules = 2;
+		assertEquals(totalSubModules, submodules.size());
 		
+		
+		List<AnalysedModuleDTO> foursquaresubmodules = submodules.get(0).subModules;
+		int totalFoursquareSubModules = 4;
+		assertEquals(totalFoursquareSubModules, foursquaresubmodules.size());
+		
+		List<AnalysedModuleDTO> latitudesubmodules = submodules.get(1).subModules;
+		int totalLatitudeSubModules = 3;
+		assertEquals(totalLatitudeSubModules, latitudesubmodules.size());
 		
 	}
 	
+	public void testGetChildrenOfClassDepthOne(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.locationbased.latitude.Account";
+		int depth = 1;
 	
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+	}
 	
+	public void testGetChildrenOfClassDepthTwo(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.locationbased.latitude.Account";
+		int depth = 2;
+	
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+	}
+	
+	public void testGetChildrenOfClassDepthZero(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.locationbased.latitude.Account";
+		int depth = 0;
+	
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+	}
+	
+	public void testGetChildrenOfUnknownPackageDepthZero(){
+		int totalModulesExpected = 0;
+		String modulesFrom = "domain.unknown";
+		int depth = 0;
+	
+		AnalysedModuleDTO[] modules = service.getChildModulesInModule(modulesFrom, depth);
+		assertEquals(totalModulesExpected, modules.length);
+	}
+	
+	public void testGetParentOfPackageLevelTwo(){
+		String parentFrom = "domain.locationbased";
+		AnalysedModuleDTO module = service.getParentModuleForModule(parentFrom);
+				
+		String nameExpected = "domain";
+		String uniqueNameExpected = "domain";
+		int submoduleExpected = 1;
+		String typeExpected = "package";
+		
+		assertEquals(nameExpected, module.name);
+		assertEquals(uniqueNameExpected, module.uniqueName);
+		assertEquals(submoduleExpected, module.subModules.size());
+		assertEquals(typeExpected, module.type);
+		
+		AnalysedModuleDTO locationbasedModule = module.subModules.get(0);
+		
+		String locationbasedNameExpected = "locationbased";
+		String locationbasedUniquenameExpected = "domain.locationbased";
+		int locationbasedSubmodulesExpected = 0;
+		String locationbasedTypeExpected = "package";
+		
+		assertEquals(locationbasedNameExpected, locationbasedModule.name);
+		assertEquals(locationbasedUniquenameExpected, locationbasedModule.uniqueName);
+		assertEquals(locationbasedSubmodulesExpected, locationbasedModule.subModules.size());
+		assertEquals(locationbasedTypeExpected, locationbasedModule.type);
+		
+	}
+	
+	public void testGetParentOfPackageLevelOne(){
+		String parentFrom = "domain";
+		AnalysedModuleDTO parentModule = service.getParentModuleForModule(parentFrom);
+		
+		String nameExpected = "";
+		String uniqueNameExpected = "";
+		int submodulesExpected = 0;
+		String typeExpected = "";
+		
+		assertEquals(nameExpected, parentModule.name);
+		assertEquals(uniqueNameExpected, parentModule.uniqueName);
+		assertEquals(submodulesExpected, parentModule.subModules.size());
+		assertEquals(typeExpected, parentModule.type);
+	}
+	
+	public void testGetParentOfClassLevelFour(){
+		String parentFrom = "domain.locationbased.foursquare.Account";
+		AnalysedModuleDTO parentModule = service.getParentModuleForModule(parentFrom);
+		
+		String nameExpected = "foursquare";
+		String uniquenameExpected = "domain.locationbased.foursquare";
+		int totalSubmodulesExpected = 4;
+		String typeExpected = "package";
+		
+		assertEquals(nameExpected, parentModule.name);
+		assertEquals(uniquenameExpected, parentModule.uniqueName);
+		assertEquals(totalSubmodulesExpected, parentModule.subModules.size());
+		assertEquals(typeExpected, parentModule.type);
+	}
+	
+	public void testGetParentOfNotExistingPackageLevelTwo(){
+		String parentFrom = "domain.notExist";
+		AnalysedModuleDTO parentModule = service.getParentModuleForModule(parentFrom);
+		
+		String nameExpected = "";
+		String uniqueNameExpected = "";
+		int submodulesExpected = 0;
+		String typeExpected = "";
+		
+		assertEquals(nameExpected, parentModule.name);
+		assertEquals(uniqueNameExpected, parentModule.uniqueName);
+		assertEquals(submodulesExpected, parentModule.subModules.size());
+		assertEquals(typeExpected, parentModule.type);
+	}
 	
 	
 	
@@ -309,30 +552,41 @@ public class TestDomein extends TestCase{
 			
 		moduleHashMap.put("name", name);
 		moduleHashMap.put("uniqueName", uniqueName);
-		//moduleHashMap.put("submodules.length", totalSubmodules);
+		moduleHashMap.put("subModules", totalSubmodules);
 		moduleHashMap.put("type", type);
 		
 		return moduleHashMap;
 	}
 	
 	
-	//Generieke functie om DTO's te vergelijken met een hashmap
-	//TODO : onafhankelijk van DTO maken (type DTO)
 	private boolean compaireDTOWithValues(Object o, Object[] allDependencies){
+
+		@SuppressWarnings("unchecked")
 		HashMap<String, Object> findingProperties = (HashMap<String, Object>) o;
 		
 		dependencyloop : for(Object currentDependency : allDependencies){
-			keyloop : for(String currentKey : findingProperties.keySet()){
-				
+			for(String currentKey : findingProperties.keySet()){
+								
 				try {
-					Class objectPropertyClass = currentDependency.getClass();
+					Class<? extends Object> objectPropertyClass = currentDependency.getClass();
 					Field objectPropertyField = objectPropertyClass.getDeclaredField(currentKey);
-					Object objectPropertyFieldValue = (Object) objectPropertyField.get(currentDependency).toString();
+														
+					Object objectPropertyFieldValueObject = (Object) objectPropertyField.get(currentDependency);
+					Object objectPropertyFieldValue;
+					
+					if(objectPropertyField.getType().getSimpleName().matches("List|Array")){
+						if(objectPropertyFieldValueObject == null){
+							objectPropertyFieldValue = (Integer) 0;
+						} else {
+								objectPropertyFieldValue = ((List<?>) objectPropertyFieldValueObject).size();	
+						}
+					} else {
+						objectPropertyFieldValue = objectPropertyFieldValueObject.toString();
+					}
 					Object checkingObject = (Object) findingProperties.get(currentKey);
 					Object checkingObjectValue = checkingObject.toString();
-
 					
-					if(!objectPropertyFieldValue.equals(checkingObjectValue)){
+					if(!objectPropertyFieldValue.toString().equals(checkingObjectValue.toString())){
 						continue dependencyloop;
 					}
 					
@@ -341,18 +595,9 @@ public class TestDomein extends TestCase{
 				}
 
 			}
-			
 			return true;
 		}		
 		return false;
-	}
-
-	
-	
-	
-
-
-
-	
+	}	
 }
 
