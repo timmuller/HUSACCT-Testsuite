@@ -3,14 +3,12 @@ package husaccttest.validate;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import husacct.common.dto.CategoryDTO;
 import husacct.common.dto.RuleTypeDTO;
 import husacct.common.dto.ViolationTypeDTO;
 import husacct.define.DefineServiceImpl;
 import husacct.validate.ValidateServiceImpl;
 import husacct.validate.abstraction.export.xml.ExportSeverities;
-import husacct.validate.abstraction.export.xml.ExportSeveritiesPerTypes;
 import husacct.validate.abstraction.export.xml.ExportViolations;
 import husacct.validate.domain.validation.Message;
 import husacct.validate.domain.validation.Severity;
@@ -22,8 +20,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -145,45 +145,83 @@ public class ValidateTest {
 		}
 	}
 	
-	@Test
-	public void testImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException {
+	public void testImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
 		ClassLoader.getSystemResource("husaccttest/validate/testfile.xml").toURI();
 		DocumentBuilderFactory domfactory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder dombuilder = domfactory.newDocumentBuilder();
 		File file = new File(ClassLoader.getSystemResource("husaccttest/validate/testfile.xml").toURI());
 		DOMBuilder domBuilder = new DOMBuilder();
 		Document document = domBuilder.build(dombuilder.parse(file));
-		
 		validate.loadWorkspaceData(document.getRootElement());
-		validate.getWorkspaceData();
-		System.out.println(validate.getViolations("", "").length);
-		
+		checkViolationsTheSameAsViolationsElement(validate.getConfiguration().getAllViolations(), document.getRootElement().getChild("violations"));
+		checkSeveritiesTheSameAsSeveritiesElement(validate.getConfiguration().getAllSeverities(), document.getRootElement().getChild("severities"));
+		checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(validate.getConfiguration().getAllSeveritiesPerTypesPerProgrammingLanguages(), document.getRootElement().getChild("severitiesPerTypesPerProgrammingLanguages"));
+	}
+	
+	public void checkViolationsTheSameAsViolationsElement(List<Violation> violations, Element violationsElement) throws DatatypeConfigurationException {
+		for(int i = 0; i < violationsElement.getChildren().size(); i++) {
+			Element violationElement = violationsElement.getChildren().get(i);
+			Violation violation = violations.get(i);
+			checkViolationTheSameAsViolationElement(violationElement, violation);
+		}
+	}
+	
+	public void checkSeveritiesTheSameAsSeveritiesElement(List<Severity> severities, Element severitiesElement) {
+		for(int i = 0; i < severitiesElement.getChildren().size(); i++) {
+			Element severityElement = severitiesElement.getChildren().get(i);
+			Severity severity = severities.get(i);
+			checkSeverityTheSameAsSeverityElement(severity, severityElement);
+		}
+	}
+	
+	public void checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(HashMap<String, HashMap<String, Severity>> severitiesPerTypesPerProgrammingLanguages, Element severitiesPerTypesPerProgrammingLanguagesElement) {
+		assertEquals(severitiesPerTypesPerProgrammingLanguages.size(), severitiesPerTypesPerProgrammingLanguagesElement.getChildren().size());
+		for(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage : severitiesPerTypesPerProgrammingLanguages.entrySet()) {
+			for(Element severityPerTypePerProgrammingLanguageElement : severitiesPerTypesPerProgrammingLanguagesElement.getChildren()) {
+				if(severityPerTypePerProgrammingLanguageElement.getAttribute("language").getValue().equals(severityPerTypePerProgrammingLanguage.getKey())) {
+					checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(severityPerTypePerProgrammingLanguage, severityPerTypePerProgrammingLanguageElement);
+				}
+			}
+		}
+	}
+	
+	public void checkViolationTheSameAsViolationElement(Element violationElement, Violation violation) throws DatatypeConfigurationException {
+		assertEquals(violation.getLinenumber(), Integer.parseInt(violationElement.getChildText("lineNumber")));
+		assertEquals(violation.getSeverityValue(), Integer.parseInt(violationElement.getChildText("severityValue")));
+		assertEquals(violation.getRuletypeKey(), violationElement.getChildText("ruletypeKey"));
+		assertEquals(violation.getClassPathFrom(), violationElement.getChildText("classPathFrom"));
+		assertEquals(violation.getClassPathTo(), violationElement.getChildText("classPathTo"));
+		checkLogicalModulesTheSameAsLogicalModulesElement(violationElement.getChild("logicalModules"), violation.getLogicalModules());
+		checkMessageTheSameAsMessageElement(violationElement.getChild("message"), violation.getMessage());
+		assertEquals(violation.isIndirect(), Boolean.parseBoolean(violationElement.getChildText("isIndirect")));
+		assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)violation.getOccured()), DatatypeFactory.newInstance().newXMLGregorianCalendar(violationElement.getChildText("occured")));
+	}
+	//TODO create a assertFound in case a key doesnt get found.
+	public void checkSeverityTheSameAsSeverityElement(Severity severity, Element severityElement) {
+		assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
+		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
+		assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
+		assertEquals(severity.getColor(), severityElement.getChildText("color"));
+		assertEquals(severity.getId(), UUID.fromString(severityElement.getChildText("id")));
+	}
+	//TODO create a assertFound in case a key doesnt get found.
+	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
+		assertEquals(severityPerTypePerProgrammingLanguageElement.getChildren().size(), severityPerTypePerProgrammingLanguage.getValue().size());
+		for(Entry<String, Severity> severityPerType : severityPerTypePerProgrammingLanguage.getValue().entrySet()) {
+			for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
+				if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
+					assertEquals(severityPerTypeElement.getChildText("severityId"), severityPerType.getValue().getId().toString());
+				}
+			}
+		}
 	}
 	
 	@Test
-	public void testExporting() {
-		validate.getWorkspaceData();
-	}
-
-	@Test
-	public void testExportViolations() throws DatatypeConfigurationException {
-		TestData data = new TestData();
-		ExportViolations exportViolations = new ExportViolations();
-
-		Element element = exportViolations.exportViolations(data.getViolations());
-		for (int i = 0; i <data.getViolations().size(); i++) {
-			Element violationElement = element.getChildren().get(i);
-			Violation violation = data.getViolations().get(i);
-			assertEquals(violation.getLinenumber(), Integer.parseInt(violationElement.getChildText("lineNumber")));
-			assertEquals(violation.getSeverityValue(), Integer.parseInt(violationElement.getChildText("severityValue")));
-			assertEquals(violation.getRuletypeKey(), violationElement.getChildText("ruletypeKey"));
-			assertEquals(violation.getClassPathFrom(), violationElement.getChildText("classPathFrom"));
-			assertEquals(violation.getClassPathTo(), violationElement.getChildText("classPathTo"));
-			checkLogicalModulesTheSameAsLogicalModulesElement(violationElement.getChild("logicalModules"), violation.getLogicalModules());
-			checkMessageTheSameAsMessageElement(violationElement.getChild("message"), violation.getMessage());
-			assertEquals(violation.isIndirect(), Boolean.parseBoolean(violationElement.getChildText("isIndirect")));
-			assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)violation.getOccured()), DatatypeFactory.newInstance().newXMLGregorianCalendar(violationElement.getChildText("occured")));
-		} 
+	public void testExportingAndImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
+		testImporting();
+		checkViolationsTheSameAsViolationsElement(validate.getConfiguration().getAllViolations(), validate.getWorkspaceData().getChild("violations"));
+		checkSeveritiesTheSameAsSeveritiesElement(validate.getConfiguration().getAllSeverities(), validate.getWorkspaceData().getChild("severities"));
+		checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(validate.getConfiguration().getAllSeveritiesPerTypesPerProgrammingLanguages(), validate.getWorkspaceData().getChild("severitiesPerTypesPerProgrammingLanguages"));
 	}
 
 	public void checkLogicalModulesTheSameAsLogicalModulesElement(Element logicalModulesElement, LogicalModules logicalModiles) {
@@ -203,31 +241,5 @@ public class ValidateTest {
 			checkMessageTheSameAsMessageElement(messageElement.getChild("exceptionMessages").getChildren().get(i), message.getExceptionMessage().get(i));
 		}
 	}
-	@Test
-	public void testExportSeverities() {
-		TestData data = new TestData();
-		ExportSeverities exportViolations = new ExportSeverities();
-		Element element = exportViolations.exportSeverities(data.getSeverities());
-		for (int i = 0; i <data.getSeverities().size(); i++) {
-			Element severityElement = element.getChildren().get(i);
-			Severity severity = data.getSeverities().get(i);
-			assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
-			assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
-			assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
-			assertEquals(severity.getColor(), severityElement.getChildText("color"));
-		}
-	}
-	@Test
-	public void testExportSeveritiesPerTypes() {
-		TestData data = new TestData();
-		ExportSeveritiesPerTypes exportSeveritiesPerTypes = new ExportSeveritiesPerTypes();
-		Element element = exportSeveritiesPerTypes.exportSeveritiesPerTypes(data.getSeveritiesPerTypes());
-		int i = 0;
-		for(Entry<String, Severity> entry : data.getSeveritiesPerTypes().entrySet()) {
-			Element severitiesPerTypesElement = element.getChildren().get(i);
-			assertEquals(entry.getKey(), severitiesPerTypesElement.getChildText("typeKey"));
-			assertEquals(entry.getValue().getValue(), Integer.parseInt(severitiesPerTypesElement.getChildText("value")));
-			i++;
-		}
-	}
+
 }
