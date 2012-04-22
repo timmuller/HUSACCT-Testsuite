@@ -8,8 +8,6 @@ import husacct.common.dto.RuleTypeDTO;
 import husacct.common.dto.ViolationTypeDTO;
 import husacct.define.DefineServiceImpl;
 import husacct.validate.ValidateServiceImpl;
-import husacct.validate.abstraction.export.xml.ExportSeverities;
-import husacct.validate.abstraction.export.xml.ExportViolations;
 import husacct.validate.domain.validation.Message;
 import husacct.validate.domain.validation.Severity;
 import husacct.validate.domain.validation.Violation;
@@ -23,7 +21,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -202,7 +199,6 @@ public class ValidateTest {
 		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
 		assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
 		assertEquals(severity.getColor(), severityElement.getChildText("color"));
-		assertEquals(severity.getId(), UUID.fromString(severityElement.getChildText("id")));
 	}
 	//TODO create a assertFound in case a key doesnt get found.
 	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
@@ -210,7 +206,7 @@ public class ValidateTest {
 		for(Entry<String, Severity> severityPerType : severityPerTypePerProgrammingLanguage.getValue().entrySet()) {
 			for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
 				if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
-					assertEquals(severityPerTypeElement.getChildText("severityId"), severityPerType.getValue().getId().toString());
+					assertEquals(Integer.parseInt(severityPerTypeElement.getChildText("value")), severityPerType.getValue().getValue());
 				}
 			}
 		}
