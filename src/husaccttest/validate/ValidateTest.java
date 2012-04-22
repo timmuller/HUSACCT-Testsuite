@@ -13,6 +13,7 @@ import husacct.validate.domain.validation.Severity;
 import husacct.validate.domain.validation.Violation;
 import husacct.validate.domain.validation.logicalmodule.LogicalModules;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -199,7 +200,7 @@ public class ValidateTest {
 		assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
 		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
 		assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
-		assertEquals(severity.getColor(), severityElement.getChildText("color"));
+		assertEquals(severity.getColor(), new Color(Integer.parseInt(severityElement.getChildText("color"))));
 	}
 	//TODO create a assertFound in case a key doesnt get found.
 	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
