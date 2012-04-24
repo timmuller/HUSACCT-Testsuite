@@ -7,15 +7,22 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
 
 public class ControllerTest extends TestCase {
 	
+	ControlServiceImpl service;
+	
+	@Before
+	public void setup(){
+		 service = new ControlServiceImpl();
+	}
+	
 	@Test
 	public void testLocaleObserver(){
-		ControlServiceImpl service = new ControlServiceImpl();
 		service.addLocaleChangeListener(new ILocaleChangeListener() {
 			@Override
 			public void update(Locale newLocale) {
@@ -24,5 +31,12 @@ public class ControllerTest extends TestCase {
 		});
 		service.notifyLocaleListeners(Locale.ENGLISH);
 	}
+	
+	@Test
+	public void testDefaultLocale(){
+		assertEquals(service.getLocale(), Locale.ENGLISH);
+	}
+	
+
 	
 }
