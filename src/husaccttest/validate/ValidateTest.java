@@ -29,6 +29,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.AssertionFailedError;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
@@ -172,7 +174,7 @@ public class ValidateTest {
 			checkSeverityTheSameAsSeverityElement(severity, severityElement);
 		}
 	}
-	
+	//TODO assert a programming language is found like findSeverityPerTypeElement();
 	public void checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(HashMap<String, HashMap<String, Severity>> severitiesPerTypesPerProgrammingLanguages, Element severitiesPerTypesPerProgrammingLanguagesElement) {
 		assertEquals(severitiesPerTypesPerProgrammingLanguages.size(), severitiesPerTypesPerProgrammingLanguagesElement.getChildren().size());
 		for(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage : severitiesPerTypesPerProgrammingLanguages.entrySet()) {
@@ -195,23 +197,29 @@ public class ValidateTest {
 		assertEquals(violation.isIndirect(), Boolean.parseBoolean(violationElement.getChildText("isIndirect")));
 		assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)violation.getOccured()), DatatypeFactory.newInstance().newXMLGregorianCalendar(violationElement.getChildText("occured")));
 	}
-	//TODO create a assertFound in case a key doesnt get found.
+	
 	public void checkSeverityTheSameAsSeverityElement(Severity severity, Element severityElement) {
 		assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
 		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
 		assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
 		assertEquals(severity.getColor(), new Color(Integer.parseInt(severityElement.getChildText("color"))));
 	}
-	//TODO create a assertFound in case a key doesnt get found.
+	
 	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
 		assertEquals(severityPerTypePerProgrammingLanguageElement.getChildren().size(), severityPerTypePerProgrammingLanguage.getValue().size());
 		for(Entry<String, Severity> severityPerType : severityPerTypePerProgrammingLanguage.getValue().entrySet()) {
-			for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
-				if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
-					assertEquals(Integer.parseInt(severityPerTypeElement.getChildText("value")), severityPerType.getValue().getValue());
-				}
+			int severityValue = findSeverityPerTypeElement(severityPerTypePerProgrammingLanguageElement, severityPerType);
+			assertEquals(severityValue, severityPerType.getValue().getValue());
+		}
+	}
+	
+	public int findSeverityPerTypeElement(Element severityPerTypePerProgrammingLanguageElement, Entry<String, Severity> severityPerType) {
+		for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
+			if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
+				return Integer.parseInt(severityPerTypeElement.getChildText("value"));
 			}
 		}
+		throw new AssertionFailedError("There was an error finding a type by the key: " + severityPerType.getKey());
 	}
 	
 	@Test
