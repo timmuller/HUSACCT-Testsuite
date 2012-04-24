@@ -1,4 +1,4 @@
-package domain.netlog;
+package husaccttest.analyse.benchmark_application.domain.netlog;
 //Functional requirement 4.5
 //Test case 203: the following classes have a circular dependency
 //					* domain.netlog.Picture has a dependency with domain.netlog.Tag
