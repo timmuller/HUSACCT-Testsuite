@@ -188,7 +188,7 @@ public class ValidateTest {
 	
 	public void checkViolationTheSameAsViolationElement(Element violationElement, Violation violation) throws DatatypeConfigurationException {
 		assertEquals(violation.getLinenumber(), Integer.parseInt(violationElement.getChildText("lineNumber")));
-		assertEquals(violation.getSeverityValue(), Integer.parseInt(violationElement.getChildText("severityValue")));
+		assertEquals(violation.getSeverity().getId().toString(), violationElement.getChildText("severityId"));
 		assertEquals(violation.getRuletypeKey(), violationElement.getChildText("ruletypeKey"));
 		assertEquals(violation.getClassPathFrom(), violationElement.getChildText("classPathFrom"));
 		assertEquals(violation.getClassPathTo(), violationElement.getChildText("classPathTo"));
@@ -201,22 +201,22 @@ public class ValidateTest {
 	public void checkSeverityTheSameAsSeverityElement(Severity severity, Element severityElement) {
 		assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
 		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
-		assertEquals(severity.getValue(),Integer.parseInt(severityElement.getChildText("value")));
+		assertEquals(severity.getId().toString(), severityElement.getChildText("id"));
 		assertEquals(severity.getColor(), new Color(Integer.parseInt(severityElement.getChildText("color"))));
 	}
 	
 	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
 		assertEquals(severityPerTypePerProgrammingLanguageElement.getChildren().size(), severityPerTypePerProgrammingLanguage.getValue().size());
 		for(Entry<String, Severity> severityPerType : severityPerTypePerProgrammingLanguage.getValue().entrySet()) {
-			int severityValue = findSeverityPerTypeElement(severityPerTypePerProgrammingLanguageElement, severityPerType);
-			assertEquals(severityValue, severityPerType.getValue().getValue());
+			String severityId = findSeverityPerTypeElement(severityPerTypePerProgrammingLanguageElement, severityPerType);
+			assertEquals(severityId, severityPerType.getValue().getId().toString());
 		}
 	}
 	
-	public int findSeverityPerTypeElement(Element severityPerTypePerProgrammingLanguageElement, Entry<String, Severity> severityPerType) {
+	public String findSeverityPerTypeElement(Element severityPerTypePerProgrammingLanguageElement, Entry<String, Severity> severityPerType) {
 		for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
 			if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
-				return Integer.parseInt(severityPerTypeElement.getChildText("value"));
+				return severityPerTypeElement.getChildText("severityId");
 			}
 		}
 		throw new AssertionFailedError("There was an error finding a type by the key: " + severityPerType.getKey());
