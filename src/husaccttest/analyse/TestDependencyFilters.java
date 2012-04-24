@@ -12,91 +12,150 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void setUp(){
 		service = new AnalyseServiceImpl();
 	}
-
-	public void testDependenciesFromToTypeInterfaces(){
-		String from = "domain";
-		String to   = "infrastructure";
-		String[] dependencyFilter = {"interface"};
-		int expectedDependencies = 2;
+	
+	
+	public void testGetDependenciesBetweenClassTypeExtends(){
+		String from = "domain.locationbased.foursquare.History";
+		String to = "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO";
+		String[] dependencyFilter = {"Extends"};
+		int dependenciesExpected = 1;
+		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
-				
-		assertEquals(expectedDependencies, dependencies.length);
+		assertEquals(dependenciesExpected, dependencies.length);
 		
-		String foursquareMapFrom = "domain.locationbased.foursquare.Map";
-		String foursquareMapTo = "infrastructure.socialmedia.locationbased.foursquare.IMap";
-		String foursquareMapType = "Extends";
-		int foursquareMapLine = 10;
+		String fromExpected = from;
+		String toExpected = to;
+		String typeExpected = dependencyFilter[0];
+		int linenumberExpected = 10;
 		
-		String latitudeMapFrom = "domain.locationbased.latitude.Map";
-		String latitudeMapTo = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String latitudeMapType = "Implements";
-		int latitudeMapLine = 10;
+		HashMap<String, Object> expectedDependency = createDependencyHashmap(
+				fromExpected, toExpected, typeExpected, linenumberExpected);
 		
-		HashMap<String, Object> foursquareMapDependency = createDependencyHashmap(foursquareMapFrom, foursquareMapTo, foursquareMapType, foursquareMapLine);
-		HashMap<String, Object> latitudeMapDependency = createDependencyHashmap(latitudeMapFrom, latitudeMapTo, latitudeMapType, latitudeMapLine);
-		
-		boolean foundFoursquareMap = compaireDTOWithValues(foursquareMapDependency, dependencies);
-		boolean foundLatitudeMap = compaireDTOWithValues(latitudeMapDependency, dependencies);
-		
-		assertEquals(true, foundFoursquareMap);
-		assertEquals(true, foundLatitudeMap);
+		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
+		assertEquals(true, foundDependency);	
 	}
 	
-	public void testDependenciesFromTypeInterfaces(){
-		String from = "domain";
-		String[] dependencyFilter = {"interface"};
-		int expectedDependencies = 2;
-		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
+	public void testGetDependenciesBetweenPackageTypeExtends(){
+		String from = "domain.locationbased.foursquare";
+		String to = "infrastructure.socialmedia.locationbased.foursquare";
+		String[] dependencyFilter = {"Extends"};
+		int dependenciesExpected = 3;
+		
+		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
+		assertEquals(dependenciesExpected, dependencies.length);
+		
+		String historyFromExpected = from + ".History";
+		String historyToExpected = to + ".HistoryDAO";
+		String historyTypeExpected = dependencyFilter[0];
+		int historyLinenumberExpected = 10;
+		
+		String friendsFromExpected = from + ".Friends";
+		String friendsToExpected = to + ".FriendsDAO";
+		String friendsTypeExpected = dependencyFilter[0];
+		int friendsLinenumberExpected = 10;
+		
+		String mapFromExpected = from + ".Map";
+		String mapToExpected = to + ".IMap";
+		String mapTypeExpected = dependencyFilter[0];
+		int mapLinenumberExpected = 10;
+		
+		HashMap<String, Object> historyDependency = createDependencyHashmap(
+				historyFromExpected, historyToExpected, historyTypeExpected, historyLinenumberExpected);
+		HashMap<String, Object> friendsDependency = createDependencyHashmap(
+				friendsFromExpected, friendsToExpected, friendsTypeExpected, friendsLinenumberExpected);
+		HashMap<String, Object> mapDependency = createDependencyHashmap(
+				mapFromExpected, mapToExpected, mapTypeExpected, mapLinenumberExpected);
+		
+		boolean foundHistory = compaireDTOWithValues(historyDependency, dependencies);
+		boolean foundFriends = compaireDTOWithValues(friendsDependency, dependencies);
+		boolean foundMap = compaireDTOWithValues(mapDependency, dependencies);
+		
+		assertEquals(true, foundHistory);
+		assertEquals(true, foundFriends);
+		assertEquals(true, foundMap);
+	}
+	
+	public void testGetDependenciesBetweenPackageTypeExtendsAndInvocConstructor(){
+		String from = "domain.locationbased.foursquare";
+		String to = "infrastructure.socialmedia.locationbased.foursquare";
+		String[] dependencyFilter = {"Extends", "InvocConstructor"};
+		int dependenciesExpected = 4;
+		
+		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
+		assertEquals(dependenciesExpected, dependencies.length);
+		
+		String historyFromExpected = from + ".History";
+		String historyToExpected = to + ".HistoryDAO";
+		String historyTypeExpected = dependencyFilter[0];
+		int historyLinenumberExpected = 10;
+		
+		String friendsFromExpected = from + ".Friends";
+		String friendsToExpected = to + ".FriendsDAO";
+		String friendsTypeExpected = dependencyFilter[0];
+		int friendsLinenumberExpected = 10;
+		
+		String mapFromExpected = from + ".Map";
+		String mapToExpected = to + ".IMap";
+		String mapTypeExpected = dependencyFilter[0];
+		int mapLinenumberExpected = 10;
+		
+		String accountFromExpected = from + ".Account";
+		String accountToExpected = to + ".AccountDAO";
+		String accountTypeExpected = dependencyFilter[1];
+		int accountLinenumberExpected = 10;
+		
+		HashMap<String, Object> historyDependency = createDependencyHashmap(
+				historyFromExpected, historyToExpected, historyTypeExpected, historyLinenumberExpected);
+		HashMap<String, Object> friendsDependency = createDependencyHashmap(
+				friendsFromExpected, friendsToExpected, friendsTypeExpected, friendsLinenumberExpected);
+		HashMap<String, Object> mapDependency = createDependencyHashmap(
+				mapFromExpected, mapToExpected, mapTypeExpected, mapLinenumberExpected);
+		HashMap<String, Object> accountDependency = createDependencyHashmap(
+				accountFromExpected, accountToExpected, accountTypeExpected, accountLinenumberExpected);
+		
+		
+		boolean foundHistory = compaireDTOWithValues(historyDependency, dependencies);
+		boolean foundFriends = compaireDTOWithValues(friendsDependency, dependencies);
+		boolean foundMap = compaireDTOWithValues(mapDependency, dependencies);
+		boolean foundAccount = compaireDTOWithValues(accountDependency, dependencies);
+		
+		assertEquals(true, foundHistory);
+		assertEquals(true, foundFriends);
+		assertEquals(true, foundMap);
+		assertEquals(true, foundAccount);
+	}
+	
+	public void testGetDependenciesFilterWithoutResults(){
+		String from = "domain.locationbased.foursquare";
+		String to = "infrastructure.socialmedia.locationbased.foursquare";
+		String[] dependencyFilter = {"Implements"};
+		int dependenciesExpected = 0;
+		
+		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
+		assertEquals(dependenciesExpected, dependencies.length);
+	}
+	
+	public void testGetDependenciesFilterWithNotExistingPackage(){
+		String from = "domain.notExisting";
+		String to = "infrastructure.socialmedia.locationbased.foursquare";
+		String[] dependencyFilter = {"Extends"};
+		int dependenciesExpected = 0;
+		
+		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
+		assertEquals(dependenciesExpected, dependencies.length);
 
-		assertEquals(expectedDependencies, dependencies.length);
 		
-		String foursquareMapFrom = "domain.locationbased.foursquare.Map";
-		String foursquareMapTo = "infrastructure.socialmedia.locationbased.foursquare.IMap";
-		String foursquareMapType = "Extends";
-		int foursquareMapLine = 10;
-		
-		String latitudeMapFrom = "domain.locationbased.latitude.Map";
-		String latitudeMapTo = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String latitudeMapType = "Implements";
-		int latitudeMapLine = 10;
-		
-		HashMap<String, Object> foursquareMapDependency = createDependencyHashmap(foursquareMapFrom, foursquareMapTo, foursquareMapType, foursquareMapLine);
-		HashMap<String, Object> latitudeMapDependency = createDependencyHashmap(latitudeMapFrom, latitudeMapTo, latitudeMapType, latitudeMapLine);
-		
-		boolean foundFoursquareMap = compaireDTOWithValues(foursquareMapDependency, dependencies);
-		boolean foundLatitudeMap = compaireDTOWithValues(latitudeMapDependency, dependencies);
-		
-		assertEquals(true, foundFoursquareMap);
-		assertEquals(true, foundLatitudeMap);
 	}
+
+
 	
-	public void testDependenciesToTypeInterfaces(){
-		String to   = "infrastructure";
-		String[] dependencyFilter = {"interface"};
-		int expectedDependencies = 2;
-		DependencyDTO[] dependencies = service.getDependenciesTo(to, dependencyFilter);
-		
-		assertEquals(expectedDependencies, dependencies.length);
-		
-		String foursquareMapFrom = "domain.locationbased.foursquare.Map";
-		String foursquareMapTo = "infrastructure.socialmedia.locationbased.foursquare.IMap";
-		String foursquareMapType = "Extends";
-		int foursquareMapLine = 10;
-		
-		String latitudeMapFrom = "domain.locationbased.latitude.Map";
-		String latitudeMapTo = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String latitudeMapType = "Implements";
-		int latitudeMapLine = 10;
-		
-		HashMap<String, Object> foursquareMapDependency = createDependencyHashmap(foursquareMapFrom, foursquareMapTo, foursquareMapType, foursquareMapLine);
-		HashMap<String, Object> latitudeMapDependency = createDependencyHashmap(latitudeMapFrom, latitudeMapTo, latitudeMapType, latitudeMapLine);
-		
-		boolean foundFoursquareMap = compaireDTOWithValues(foursquareMapDependency, dependencies);
-		boolean foundLatitudeMap = compaireDTOWithValues(latitudeMapDependency, dependencies);
-		
-		assertEquals(true, foundFoursquareMap);
-		assertEquals(true, foundLatitudeMap);
-	}
+	
+	
+	
+	
+	
+	
+	
 	
 }
 
