@@ -1,4 +1,4 @@
-package domain.netlog;
+package husaccttest.analyse.benchmark_application.domain.netlog;
 
 import java.util.ArrayList;
 import java.util.List;

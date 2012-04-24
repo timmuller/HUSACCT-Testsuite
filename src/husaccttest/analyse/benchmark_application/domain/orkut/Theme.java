@@ -1,4 +1,4 @@
-package domain.orkut;
+package husaccttest.analyse.benchmark_application.domain.orkut;
 
 public class Theme {
 

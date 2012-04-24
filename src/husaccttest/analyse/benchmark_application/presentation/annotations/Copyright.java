@@ -1,4 +1,4 @@
-package presentation.annotations;
+package husaccttest.analyse.benchmark_application.presentation.annotations;
 
 import java.lang.annotation.Documented;
 
