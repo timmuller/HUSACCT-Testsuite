@@ -104,11 +104,14 @@ public class TestDomainModule extends TestCaseExtended{
 		int latitudeSubmodulesExpected = 0;
 		String latitudeTypeExpected = "package";
 		
-		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
-		HashMap<String, Object> latitudeExpectedModule = createModuleHashmap(latitudeNameExpected, latitudeUniqueNameExpected, latitudeSubmodulesExpected, latitudeTypeExpected);
+		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
+				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
+		HashMap<String, Object> latitudeExpectedModule = createModuleHashmap(
+				latitudeNameExpected, latitudeUniqueNameExpected, latitudeSubmodulesExpected, latitudeTypeExpected);
 		
 		boolean foundFoursquare = compaireDTOWithValues(foursquareExpectedModule, modules);
 		boolean foundLatitude = compaireDTOWithValues(latitudeExpectedModule, modules);
+		
 		assertEquals(true, foundFoursquare);
 		assertEquals(true, foundLatitude);
 	}
@@ -138,6 +141,7 @@ public class TestDomainModule extends TestCaseExtended{
 		
 		boolean foundFoursquare = compaireDTOWithValues(foursquareExpectedModule, modules);
 		boolean foundLatitude = compaireDTOWithValues(latitudeExpectedModule, modules);
+		
 		assertEquals(true, foundFoursquare);
 		assertEquals(true, foundLatitude);
 	}
@@ -164,7 +168,6 @@ public class TestDomainModule extends TestCaseExtended{
 		List<AnalysedModuleDTO> submodules = modules[0].subModules;
 		int totalSubModules = 2;
 		assertEquals(totalSubModules, submodules.size());
-		
 		
 		List<AnalysedModuleDTO> foursquaresubmodules = submodules.get(0).subModules;
 		int totalFoursquareSubModules = 4;

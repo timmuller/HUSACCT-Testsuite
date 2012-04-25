@@ -1,6 +1,5 @@
 package husaccttest.analyse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import husacct.analyse.AnalyseServiceImpl;
@@ -29,7 +28,6 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
 				fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
-		
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
 		assertEquals(true, foundDependency);
 	}
@@ -41,8 +39,6 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
-		
-		
 		
 		String accountFromPathExpected = fromPath + ".Account";
 		String accountToPathExpected = toPath + ".AccountDAO";
@@ -61,17 +57,10 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		HashMap<String, Object> expectedAccountDependency = createDependencyHashmap (
 				accountFromPathExpected, accountToPathExpected, accountTypeExpected, accountLinenumberExpected);
-		
 		HashMap<String, Object> expectedFriendsDependency = createDependencyHashmap(
 				friendsFromPathExpected, friendsToPathExpected, friendsTypeExpected, friendsLinenumberExpected);
-		
 		HashMap<String, Object> expectedMapDependency = createDependencyHashmap(
 				mapFromPathExpected, mapToPathExpected, mapTypeExpected, mapLinenumberExpected);
-		
-		ArrayList<Object> expectedDependencies = new ArrayList<Object>();
-		expectedDependencies.add(expectedAccountDependency);
-		expectedDependencies.add(expectedFriendsDependency);
-		expectedDependencies.add(expectedMapDependency);
 		
 		boolean foundAccountDependency = compaireDTOWithValues(expectedAccountDependency, dependencies);
 		boolean foundFriendsDependency = compaireDTOWithValues(expectedFriendsDependency, dependencies);
@@ -87,7 +76,6 @@ public class TestDomainDependencies extends TestCaseExtended{
 		int totalDependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
-		
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
 		String fromPathExpected = fromPath + ".Map";
@@ -151,7 +139,6 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
 				fromExpected, toExpected, typeExpected, lineExpected);
-		
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
 		assertEquals(true, foundDependency);
 	}
@@ -232,6 +219,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 		boolean accountFoundDependency = compaireDTOWithValues(accountExpectedDependency, dependencies);
 		boolean friendsFoundDependency = compaireDTOWithValues(friendsExpectedDependency, dependencies);
 		boolean mapFoundDependency = compaireDTOWithValues(mapExpectedDependency, dependencies);
+		
 		assertEquals(true, accountFoundDependency);
 		assertEquals(true, friendsFoundDependency);
 		assertEquals(true, mapFoundDependency);
