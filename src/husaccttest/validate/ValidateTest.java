@@ -3,6 +3,7 @@ package husaccttest.validate;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import husacct.common.dto.CategoryDTO;
 import husacct.common.dto.RuleTypeDTO;
 import husacct.common.dto.ViolationTypeDTO;
@@ -65,15 +66,15 @@ public class ValidateTest {
 	{
 		CategoryDTO[] dtos = validate.getCategories();		
 		assertArrayEquals(new String[]{"legalityofdependency"}, getCategoryStringArray(dtos));	
-		
+
 		final String [] currentRuletypes = new String[]{"IsNotAllowedToUse", "IsOnlyAllowedToUse","IsOnlyModuleAllowedToUse","IsAllowedToUse", "MustUse","SkipCall","BackCall"};
 		assertArrayEquals(currentRuletypes, getRuleTypesStringArray(dtos));
-		
+
 		DefineServiceImpl defineService = new DefineServiceImpl();	
 		if(defineService.getApplicationDetails().programmingLanguage != null){
 			if(defineService.getApplicationDetails().programmingLanguage.isEmpty()){
-				assertEquals(0, getViolationTypesStringArray(dtos, "IsNotAllowedToUse").length);
-				assertEquals(0, getViolationTypesStringArray(dtos, "IsAllowedToUse").length);
+				assertEquals(10, getViolationTypesStringArray(dtos, "IsNotAllowedToUse").length);
+				assertEquals(10, getViolationTypesStringArray(dtos, "IsAllowedToUse").length);
 			}			
 			else if(defineService.getApplicationDetails().programmingLanguage.equals("Java")){
 				assertEquals(9, getViolationTypesStringArray(dtos, "IsNotAllowedToUse").length);
@@ -117,7 +118,7 @@ public class ValidateTest {
 		}
 		return violationtypeList.toArray(new String[]{});
 	}
-	
+
 	@Test
 	public void isValidatedBeforeValidation(){
 		assertFalse(validate.isValidated());
@@ -127,15 +128,15 @@ public class ValidateTest {
 	public void getViolations()
 	{
 		validate.checkConformance();
-		assertEquals("domain.locationbased.foursquare.Account", validate.getViolations("DomainLayer", "Infrastructure")[0].getFromClasspath());
-		assertEquals("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", validate.getViolations("DomainLayer", "Infrastructure")[0].getToClasspath());
-		assertEquals("InvocConstructor", validate.getViolations("DomainLayer", "Infrastructure")[0].getViolationType().getKey());
+		assertEquals("domain.locationbased.foursquare.Account", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getFromClasspath());
+		assertEquals("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getToClasspath());
+		assertEquals("InvocConstructor", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getViolationType().getKey());
 	}
-	
+
 	@Test
 	public void isValidatedAfterValidation(){
 		validate.checkConformance();
-		assertFalse(validate.isValidated());
+		assertTrue(validate.isValidated());
 	}
 
 	@Ignore
@@ -145,7 +146,7 @@ public class ValidateTest {
 			validate.checkConformance();
 		}
 	}
-	
+
 	public void testImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
 		ClassLoader.getSystemResource("husaccttest/validate/testfile.xml").toURI();
 		DocumentBuilderFactory domfactory = DocumentBuilderFactory.newInstance();
@@ -158,7 +159,7 @@ public class ValidateTest {
 		checkSeveritiesTheSameAsSeveritiesElement(validate.getConfiguration().getAllSeverities(), document.getRootElement().getChild("severities"));
 		checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(validate.getConfiguration().getAllSeveritiesPerTypesPerProgrammingLanguages(), document.getRootElement().getChild("severitiesPerTypesPerProgrammingLanguages"));
 	}
-	
+
 	public void checkViolationsTheSameAsViolationsElement(List<Violation> violations, Element violationsElement) throws DatatypeConfigurationException {
 		for(int i = 0; i < violationsElement.getChildren().size(); i++) {
 			Element violationElement = violationsElement.getChildren().get(i);
@@ -166,7 +167,7 @@ public class ValidateTest {
 			checkViolationTheSameAsViolationElement(violationElement, violation);
 		}
 	}
-	
+
 	public void checkSeveritiesTheSameAsSeveritiesElement(List<Severity> severities, Element severitiesElement) {
 		for(int i = 0; i < severitiesElement.getChildren().size(); i++) {
 			Element severityElement = severitiesElement.getChildren().get(i);
@@ -185,7 +186,7 @@ public class ValidateTest {
 			}
 		}
 	}
-	
+
 	public void checkViolationTheSameAsViolationElement(Element violationElement, Violation violation) throws DatatypeConfigurationException {
 		assertEquals(violation.getLinenumber(), Integer.parseInt(violationElement.getChildText("lineNumber")));
 		assertEquals(violation.getSeverity().getId().toString(), violationElement.getChildText("severityId"));
@@ -197,14 +198,14 @@ public class ValidateTest {
 		assertEquals(violation.isIndirect(), Boolean.parseBoolean(violationElement.getChildText("isIndirect")));
 		assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)violation.getOccured()), DatatypeFactory.newInstance().newXMLGregorianCalendar(violationElement.getChildText("occured")));
 	}
-	
+
 	public void checkSeverityTheSameAsSeverityElement(Severity severity, Element severityElement) {
 		assertEquals(severity.getDefaultName(), severityElement.getChildText("defaultName"));
 		assertEquals(severity.getUserName(), severityElement.getChildText("userName"));
 		assertEquals(severity.getId().toString(), severityElement.getChildText("id"));
 		assertEquals(severity.getColor(), new Color(Integer.parseInt(severityElement.getChildText("color"))));
 	}
-	
+
 	public void checkSeverityPerTypePerProgrammingLanguageTheSameAsSeverityPerTypePerProgrammingLanguageElement(Entry<String, HashMap<String, Severity>> severityPerTypePerProgrammingLanguage, Element severityPerTypePerProgrammingLanguageElement) {
 		assertEquals(severityPerTypePerProgrammingLanguageElement.getChildren().size(), severityPerTypePerProgrammingLanguage.getValue().size());
 		for(Entry<String, Severity> severityPerType : severityPerTypePerProgrammingLanguage.getValue().entrySet()) {
@@ -212,7 +213,7 @@ public class ValidateTest {
 			assertEquals(severityId, severityPerType.getValue().getId().toString());
 		}
 	}
-	
+
 	public String findSeverityPerTypeElement(Element severityPerTypePerProgrammingLanguageElement, Entry<String, Severity> severityPerType) {
 		for(Element severityPerTypeElement : severityPerTypePerProgrammingLanguageElement.getChildren()) {
 			if(severityPerTypeElement.getChildText("typeKey").equals(severityPerType.getKey())) {
@@ -221,7 +222,7 @@ public class ValidateTest {
 		}
 		throw new AssertionFailedError("There was an error finding a type by the key: " + severityPerType.getKey());
 	}
-	
+
 	@Test
 	public void testExportingAndImporting() throws URISyntaxException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
 		testImporting();
