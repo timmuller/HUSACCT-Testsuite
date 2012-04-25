@@ -19,7 +19,7 @@ public class GraphicsServiceTest {
 		javax.swing.JInternalFrame panel = service.getAnalysedArchitectureGUI();
 		
 		assertNotNull(panel);
-		assertSame(javax.swing.JInternalFrame.class, panel.getClass());
+		assertTrue(panel instanceof javax.swing.JInternalFrame);
 	}
 	
 	@Test
@@ -27,7 +27,7 @@ public class GraphicsServiceTest {
 		javax.swing.JInternalFrame panel = service.getDefinedArchitectureGUI();
 		
 		assertNotNull(panel);
-		assertSame(javax.swing.JInternalFrame.class, panel.getClass());
+		assertTrue(panel instanceof javax.swing.JInternalFrame);
 	}
 
 }
