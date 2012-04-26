@@ -1,5 +1,9 @@
 package husaccttest.analyse;
 
+import husacct.analyse.AnalyseServiceImpl;
+import husacct.analyse.domain.ModelService;
+import husacct.analyse.domain.famix.FamixModelServiceImpl;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +11,16 @@ import java.util.List;
 import junit.framework.TestCase;
 
 public abstract class TestCaseExtended extends TestCase{
+	
+
+	protected AnalyseServiceImpl service;
+	private ModelService famix;
+	
+	public void setUp(){
+		service = new AnalyseServiceImpl();
+		famix = new FamixModelServiceImpl();
+		fillFamixAsStub();
+	}
 	
 	public boolean itemExistInArray(Object value, Object[] items){
 		for(Object o : items){
@@ -80,5 +94,39 @@ public abstract class TestCaseExtended extends TestCase{
 		return false;
 	}	
 	
+	private void fillFamixAsStub(){
+		famix.createPackage("domain", "", "domain");
+		famix.createPackage("domain.locationbased", "domain", "locationbased");
+		famix.createPackage("domain.locationbased.latitude", "domain.locationbased", "latitude");
+		famix.createPackage("domain.locationbased.foursquare", "domain.locationbased", "foursquare");
+		famix.createPackage("infrastructure", "", "infrastructure");
+		famix.createPackage("infrastructure.socialmedia", "infrastructure", "socialmedia");
+		famix.createPackage("infrastructure.socialmedia.locationbased", "infrastructure.socialmedia", "locationbased");
+		famix.createPackage("infrastructure.socialmedia.locationbased.latitude", "infrastructure.socialmedia.locationbased", "latitude");
+		famix.createPackage("infrastructure.socialmedia.locationbased.foursquare", "infrastructure.socialmedia.locationbased", "foursquare");
+		
+		famix.createClass("domain.locationbased.foursquare.Account", "Account", "domain.locationbased.foursquare", false, false);
+		famix.createClass("domain.locationbased.foursquare.Friends", "Friends", "domain.locationbased.foursquare", false, false, "infrastructure.socialmedia.locationbased.foursquare.FriendsDAO");
+		famix.createClass("domain.locationbased.foursquare.Map", "Map", "domain.locationbased.foursquare", false, false, "infrastructure.socialmedia.locationbased.foursquare.IMap");
+		famix.createClass("domain.locationbased.foursquare.History", "History", "domain.locationbased.foursquare", false, false, "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO");
+		
+		famix.createClass("domain.locationbased.latitude.Account", "Account", "domain.locationbased.latitude", false, false);
+		famix.createClass("domain.locationbased.latitude.Friends", "Friends", "domain.locationbased.latitude", false, false, "infrastructure.socialmedia.locationbased.latitude.FriendsDAO");
+		famix.createClass("domain.locationbased.latitude.Map", "Map", "domain.locationbased.latitude", false, false, "infrastructure.socialmedia.locationbased.latitude.IMap");
+		
+		famix.createClass("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", "AccountDAO", "infrastructure.socialmedia.locationbased.foursquare", false, false);
+		famix.createClass("infrastructure.socialmedia.locationbased.foursquare.FriendsDAO", "FriendsDAO", "infrastructure.socialmedia.locationbased.foursquare", true, false);
+		famix.createClass("infrastructure.socialmedia.locationbased.foursquare.HistoryDAO", "HistoryDAO", "infrastructure.socialmedia.locationbased.foursquare", false, false);
+		famix.createClass("infrastructure.socialmedia.locationbased.foursquare.IMap", "IMap", "infrastructure.socialmedia.locationbased.foursquare", false, false);
+		
+		famix.createClass("infrastructure.socialmedia.locationbased.latitude.AccountDAO", "AccountDAO", "infrastructure.socialmedia.locationbased.latitude", false, false);
+		famix.createClass("infrastructure.socialmedia.locationbased.latitude.FriendsDAO", "FriendsDAO", "infrastructure.socialmedia.locationbased.latitude", true, false);
+		famix.createClass("infrastructure.socialmedia.locationbased.latitude.IMap", "IMap", "infrastructure.socialmedia.locationbased.latitude", false, false);
+
+		famix.createAttribute(false, "private", "infrastructure.socialmedia.locationbased.foursquare.AccountDAO", "AccountDAO", "Account", "domain.locationbased.foursquare.Account");
+		famix.createAttribute(false, "private", "infrastructure.socialmedia.locationbased.latitude.AccountDAO", "AccountDAO", "Account", "domain.locationbased.latitude.Account");
+		
+		//famix.printModel();
+	}
 	
 }

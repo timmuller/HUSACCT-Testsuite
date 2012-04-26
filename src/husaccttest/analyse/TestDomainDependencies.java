@@ -2,16 +2,9 @@ package husaccttest.analyse;
 
 import java.util.HashMap;
 
-import husacct.analyse.AnalyseServiceImpl;
 import husacct.common.dto.DependencyDTO;
 
 public class TestDomainDependencies extends TestCaseExtended{
-
-	private AnalyseServiceImpl service;
-	
-	public void setUp(){
-		service = new AnalyseServiceImpl();
-	}
 	
 	public void testGetDependencyFromAndToClasses(){
 		String fromPath = "domain.locationbased.foursquare.History";

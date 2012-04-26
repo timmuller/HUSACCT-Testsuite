@@ -7,12 +7,7 @@ import husacct.common.dto.DependencyDTO;
 
 public class TestDependencyFilters extends TestCaseExtended{
 
-	private AnalyseServiceImpl service;
-	
-	public void setUp(){
-		service = new AnalyseServiceImpl();
-	}
-	
+
 	public void testGetDependenciesBetweenClassTypeExtends(){
 		String from = "domain.locationbased.foursquare.History";
 		String to = "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO";

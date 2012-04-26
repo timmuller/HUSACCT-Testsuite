@@ -7,12 +7,6 @@ import husacct.analyse.AnalyseServiceImpl;
 import husacct.common.dto.AnalysedModuleDTO;
 
 public class TestDomainModule extends TestCaseExtended{
-
-	private AnalyseServiceImpl service;
-	
-	public void setUp(){
-		service = new AnalyseServiceImpl();
-	}
 	
 	public void testGetRootModules(){
 		int totalModulesExpected = 2;
