@@ -1,4 +1,4 @@
-package husaccttest.define.domain;
+package husaccttest.define;
 
 import static org.junit.Assert.*;
 
@@ -37,12 +37,10 @@ public class DefineServiceTests {
 		Module subModule3 = new Module("Sub Module 3", "This is a submodule");		
 
 		AppliedRule rule1 = new AppliedRule("IsNotAllowedToUse", "Test", new String[]{},
-				"prefix", "suffix", module1,
-				module2);
+				"", module1, module2, true);
 
 		AppliedRule exception1 = new AppliedRule("IsAllowedToUse", "Test", new String[]{},
-				"prefix", "suffix", subModule1,
-				subModule2);
+				"", subModule1,	subModule2, true);
 		
 		//TODO: Test SoftwareUnitDefinitions
 		module1.addSubModule(subModule1);
@@ -61,6 +59,19 @@ public class DefineServiceTests {
 		
 		sA.addAppliedRule(rule1);
 		
+	}
+	
+	@Test
+	public void isDefined(){
+		boolean testWorks = true;
+		defineService.isDefined();
+		assertTrue(testWorks);
+	}
+	@Test
+	public void isMapped(){
+		boolean testWorks = true;
+		defineService.isMapped();
+		assertTrue(testWorks);
 	}
 	
 	@Test
