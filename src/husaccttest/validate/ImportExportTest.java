@@ -49,9 +49,9 @@ public class ImportExportTest {
 		DOMBuilder domBuilder = new DOMBuilder();
 		Document document = domBuilder.build(dombuilder.parse(file));
 		validate.loadWorkspaceData(document.getRootElement());
-		checkViolationsTheSameAsViolationsElement(validate.getConfiguration().getAllViolations(), document.getRootElement().getChild("violations"));
 		checkSeveritiesTheSameAsSeveritiesElement(validate.getConfiguration().getAllSeverities(), document.getRootElement().getChild("severities"));
 		checkSeveritiesPerTypesPerProgrammingLanguagesTheSameAsSeveritiesPerTypesPerProgrammingLanguagesElement(validate.getConfiguration().getAllSeveritiesPerTypesPerProgrammingLanguages(), document.getRootElement().getChild("severitiesPerTypesPerProgrammingLanguages"));
+		checkViolationsTheSameAsViolationsElement(validate.getConfiguration().getAllViolations(), document.getRootElement().getChild("violations"));
 	}
 
 	public void checkViolationsTheSameAsViolationsElement(List<Violation> violations, Element violationsElement) throws DatatypeConfigurationException {
