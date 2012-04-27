@@ -122,15 +122,21 @@ public class ValidateTest {
 	@Test
 	public void isValidatedBeforeValidation(){
 		assertFalse(validate.isValidated());
-	}
+	} //XXX eeee
 
 	@Test
-	public void getViolations()
+	public void getViolationsByLogicalPath()
 	{
 		validate.checkConformance();
 		assertEquals("domain.locationbased.foursquare.Account", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getFromClasspath());
 		assertEquals("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getToClasspath());
 		assertEquals("InvocConstructor", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getViolationType().getKey());
+	}
+	
+	@Test
+	public void getViolationsByPhysicalPath() {
+		validate.checkConformance();
+		//TODO make a test for getViolationsByPhysicalPath
 	}
 
 	@Test
