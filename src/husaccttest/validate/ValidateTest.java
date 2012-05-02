@@ -42,9 +42,9 @@ public class ValidateTest {
 	public void getCategories()
 	{
 		CategoryDTO[] dtos = validate.getCategories();		
-		assertArrayEquals(new String[]{"legalityofdependency"}, getCategoryStringArray(dtos));	
+		assertArrayEquals(new String[]{"contentsofamodule", "legalityofdependency"}, getCategoryStringArray(dtos));	
 
-		final String [] currentRuletypes = new String[]{"IsNotAllowedToUse", "IsOnlyAllowedToUse","IsOnlyModuleAllowedToUse","IsAllowedToUse", "MustUse","SkipCall","BackCall"};
+		final String [] currentRuletypes = new String[]{"InterfaceConvention", "SubClassConvention", "IsNotAllowedToUse", "IsOnlyAllowedToUse", "IsOnlyModuleAllowedToUse", "IsAllowedToUse", "MustUse", "SkipCall", "BackCall"};
 		assertArrayEquals(currentRuletypes, getRuleTypesStringArray(dtos));
 
 		DefineServiceImpl defineService = new DefineServiceImpl();	
