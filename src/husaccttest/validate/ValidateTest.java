@@ -154,7 +154,10 @@ public class ValidateTest {
 		for(int i = 0; i < 10001; i++){
 			validate.checkConformance();
 		}
-	}	
+	}
+	
+	//This method was created to test specific rules with a hardcoded DefineStub.
+	@Ignore
 	@Test
 	public void testExceptionRule(){
 		DefineServiceStubTest defineTest = new DefineServiceStubTest();
