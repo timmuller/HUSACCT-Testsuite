@@ -129,4 +129,17 @@ public class ValidateTest {
 			validate.checkConformance();
 		}
 	}
+	/*This method was created to test specific rules with a hardcoded DefineStub.
+	 * Need to change the CheckConformanceUtil getChildsFromModule to getSkipCallChildsFromModule or getBackCallChildsFromModule
+	 * depending on which scenario you wish to test.
+	 * getDefinedRules is scenario 1, which requires getSkipCallChildsFromModule.
+	 * getDefinedRulesSenarioTwo is scenario 2, which requires getBackCallChildsFromModule.
+	 */	
+	@Ignore 
+	@Test
+	public void specificRuleTest(){
+		DefineServiceStubTest define = new DefineServiceStubTest();
+		validate.Validate(define.getDefinedRulesScenarioOne());
+		validate.Validate(define.getDefinedRulesScenarioTwo());
+	}
 }
