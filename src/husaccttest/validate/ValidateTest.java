@@ -154,6 +154,11 @@ public class ValidateTest {
 		for(int i = 0; i < 10001; i++){
 			validate.checkConformance();
 		}
+	}	
+	@Test
+	public void testExceptionRule(){
+		DefineServiceStubTest defineTest = new DefineServiceStubTest();
+		validate.Validate(defineTest.getDefinedRulesWithException());
 	}
 	/*This method was created to test specific rules with a hardcoded DefineStub.
 	 * Need to change the CheckConformanceUtil getChildsFromModule to getSkipCallChildsFromModule or getBackCallChildsFromModule
@@ -164,8 +169,8 @@ public class ValidateTest {
 	@Ignore 
 	@Test
 	public void specificRuleTest(){
-		DefineServiceStubTest define = new DefineServiceStubTest();
-		validate.Validate(define.getDefinedRulesScenarioOne());
-		validate.Validate(define.getDefinedRulesScenarioTwo());
+		DefineServiceStubTest defineTest = new DefineServiceStubTest();
+		validate.Validate(defineTest.getDefinedRulesScenarioOne());
+		validate.Validate(defineTest.getDefinedRulesScenarioTwo());
 	}
 }
