@@ -6,9 +6,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import husacct.common.dto.CategoryDTO;
 import husacct.common.dto.RuleTypeDTO;
+import husacct.common.dto.ViolationDTO;
 import husacct.common.dto.ViolationTypeDTO;
 import husacct.define.DefineServiceImpl;
 import husacct.validate.ValidateServiceImpl;
+import husacct.validate.domain.validation.Violation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,15 +107,39 @@ public class ValidateTest {
 	public void getViolationsByLogicalPath()
 	{
 		validate.checkConformance();
-		assertEquals("domain.locationbased.foursquare.Account", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getFromClasspath());
-		assertEquals("infrastructure.socialmedia.locationbased.foursquare.AccountDAO", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getToClasspath());
-		assertEquals("InvocConstructor", validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure")[0].getViolationType().getKey());
+		assertTrue(listContainsFromValue(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"domain.locationbased.foursquare.Account"));
+		assertTrue(listContainsToValue(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"infrastructure.socialmedia.locationbased.foursquare.AccountDAO"));
+		assertTrue(listContainsKey(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"InvocConstructor"));
 	}
 	
 	@Test
 	public void getViolationsByPhysicalPath() {
 		validate.checkConformance();
-		//TODO make a test for getViolationsByPhysicalPath
+		assertTrue(listContainsFromValue(validate.getViolationsByPhysicalPath("domain.locationbased.foursquare", "infrastructure.socialmedia.locationbased.foursquare"),"domain.locationbased.foursquare.Account"));
+		assertTrue(listContainsToValue(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"), "infrastructure.socialmedia.locationbased.foursquare.AccountDAO"));
+		assertTrue(listContainsKey(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"InvocConstructor"));
+	
+	}
+	private boolean listContainsFromValue(ViolationDTO[] violationDTOs, String value){
+		for(ViolationDTO v: violationDTOs){
+			if(v.getFromClasspath().equals(value))
+				return true;
+		}
+		return false;
+	}
+	private boolean listContainsToValue(ViolationDTO[] violationDTOs, String value){
+		for(ViolationDTO v: violationDTOs){
+			if(v.getToClasspath().equals(value))
+				return true;
+		}
+		return false;
+	}
+	private boolean listContainsKey(ViolationDTO[] violationDTOs, String value){
+		for(ViolationDTO v: violationDTOs){
+			if(v.getViolationType().getKey().equals(value))
+				return true;
+		}
+		return false;
 	}
 
 	@Test
