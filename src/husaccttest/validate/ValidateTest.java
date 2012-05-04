@@ -10,7 +10,6 @@ import husacct.common.dto.ViolationDTO;
 import husacct.common.dto.ViolationTypeDTO;
 import husacct.define.DefineServiceImpl;
 import husacct.validate.ValidateServiceImpl;
-import husacct.validate.domain.validation.Violation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +100,7 @@ public class ValidateTest {
 	@Test
 	public void isValidatedBeforeValidation(){
 		assertFalse(validate.isValidated());
-	} //XXX eeee
+	}
 
 	@Test
 	public void getViolationsByLogicalPath()
@@ -115,6 +114,7 @@ public class ValidateTest {
 	@Test
 	public void getViolationsByPhysicalPath() {
 		validate.checkConformance();
+
 		assertTrue(listContainsFromValue(validate.getViolationsByPhysicalPath("domain.locationbased.foursquare", "infrastructure.socialmedia.locationbased.foursquare"),"domain.locationbased.foursquare.Account"));
 		assertTrue(listContainsToValue(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"), "infrastructure.socialmedia.locationbased.foursquare.AccountDAO"));
 		assertTrue(listContainsKey(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"InvocConstructor"));
