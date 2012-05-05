@@ -5,19 +5,12 @@
 package husaccttest.validate.form;
 
 import husacct.validate.ValidateServiceImpl;
-import husacct.validate.task.report.UnknownStorageTypeException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-
-import org.w3c.dom.DOMException;
-
-import com.itextpdf.text.DocumentException;
 
 /**
  *
@@ -132,23 +125,9 @@ public class TestFrame extends javax.swing.JFrame {
 		try {
 			impl.exportViolations("TestReport.html", "html", "C:\\reports");
 			JOptionPane.showMessageDialog(rootPane, "Created at C:\\reports");
-		} catch (DOMException ex) {
-			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null,
-					ex);
-		} catch (UnknownStorageTypeException ex) {
-			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null,
-					ex);
-		} catch (IOException ex) {
-			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null,
-					ex);
-		} catch (URISyntaxException ex) {
-			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null,
-					ex);
-		} catch (DocumentException ex) {
-			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null,
-					ex);
-		}
-
+		} catch (Exception ex) {
+			Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null, ex);
+		} 
 	}//GEN-LAST:event_jButton3ActionPerformed
 
 	/**
