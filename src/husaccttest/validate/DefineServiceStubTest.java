@@ -63,30 +63,11 @@ public class DefineServiceStubTest {
 		
 		//ACTUAL RULES
 		//ACTUAL RULES
-		RuleDTO ruleOne = new RuleDTO();
-		ruleOne.ruleTypeKey = "IsNotAllowedToUse";
-			//IGNORE FOR ELABORATION VERSION
-			ruleOne.violationTypeKeys = new String[]{"InvocMethod", "InvocConstructor","ExtendsAbstract", "Implements"};
-		ruleOne.moduleFrom = lbConnectionsModule;			
-		ruleOne.moduleTo = lbDAOModule;
-		ruleOne.exceptionRules = new RuleDTO[]{};
+		RuleDTO exceptionRule = new RuleDTO("IsAllowedToUse", lbDAOModule, fqConnectionModule, new String[] {"ExtendsConcrete"}, new RuleDTO[]{});
+		RuleDTO ruleOne = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbConnectionsModule, new String[]{"InvocMethod", "InvocConstructor","ExtendsAbstract", "Implements"}, new RuleDTO[]{exceptionRule});
 
-		RuleDTO ruleTwo = new RuleDTO();
-		ruleTwo.ruleTypeKey = "IsNotAllowedToUse";		
-			//IGNORE FOR ELABORATION VERSION
-			ruleTwo.violationTypeKeys = new String[] {"ExtendsConcrete"};
-		ruleTwo.moduleFrom = lbHistoryModule;
-		ruleTwo.moduleTo = lbDAOModule;
-		ruleTwo.exceptionRules = new RuleDTO[]{};
-		
-		RuleDTO exceptionRule = new RuleDTO();
-		exceptionRule.ruleTypeKey = "IsAllowedToUse";		
-			//IGNORE FOR ELABORATION VERSION
-		exceptionRule.violationTypeKeys = new String[] {"ExtendsConcrete"};
-		exceptionRule.moduleFrom = fqConnectionModule;
-		exceptionRule.moduleTo = lbDAOModule;
-		exceptionRule.exceptionRules = new RuleDTO[]{};
-		
+		RuleDTO ruleTwo = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbHistoryModule, new String[] {"ExtendsConcrete"}, new RuleDTO[]{});
+				
 		RuleDTO[] rules = new RuleDTO[]{ruleOne, ruleTwo};
 		return rules;
 	}
@@ -153,30 +134,11 @@ public class DefineServiceStubTest {
 
 		// ACTUAL RULES
 		// ACTUAL RULES
-		RuleDTO ruleOne = new RuleDTO();
-		ruleOne.ruleTypeKey = "MustUse";
-		// IGNORE FOR ELABORATION VERSION
-		ruleOne.violationTypeKeys = new String[] { "InvocMethod",
-				"InvocConstructor", "ExtendsAbstract", "Implements" };
-		ruleOne.moduleFrom = lbConnectionsModule;
-		ruleOne.moduleTo = lbHistoryModule;
-		ruleOne.exceptionRules = new RuleDTO[] {};
+		RuleDTO ruleOne = new RuleDTO("MustUse", lbHistoryModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, new RuleDTO[] {});
 
-		RuleDTO ruleTwo = new RuleDTO();
-		ruleTwo.ruleTypeKey = "IsOnlyModuleAllowedToUse";
-		// IGNORE FOR ELABORATION VERSION
-		ruleTwo.violationTypeKeys = new String[] { "ExtendsConcrete" };
-		ruleTwo.moduleFrom = lbHistoryModule;
-		ruleTwo.moduleTo = lbDAOModule;
-		ruleTwo.exceptionRules = new RuleDTO[] {};
+		RuleDTO ruleTwo = new RuleDTO("IsOnlyModuleAllowedToUse", lbDAOModule, lbHistoryModule, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
 
-		RuleDTO ruleThree = new RuleDTO();
-		ruleThree.ruleTypeKey = "SkipCall";
-		// IGNORE FOR ELABORATION VERSION
-		ruleThree.violationTypeKeys = new String[] { "ExtendsConcrete" };
-		ruleThree.moduleFrom = domainLayer;
-		ruleThree.moduleTo = new ModuleDTO();
-		ruleThree.exceptionRules = new RuleDTO[] {};
+		RuleDTO ruleThree = new RuleDTO("SkipCall", new ModuleDTO(), domainLayer, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
 
 		RuleDTO[] rules = new RuleDTO[] { ruleOne, ruleTwo, ruleThree };
 		return rules;
@@ -233,22 +195,9 @@ public class DefineServiceStubTest {
 
 		// ACTUAL RULES
 		// ACTUAL RULES
-		RuleDTO ruleOne = new RuleDTO();
-		ruleOne.ruleTypeKey = "IsOnlyAllowedToUse";
-		// IGNORE FOR ELABORATION VERSION
-		ruleOne.violationTypeKeys = new String[] { "InvocMethod",
-				"InvocConstructor", "ExtendsAbstract", "Implements" };
-		ruleOne.moduleFrom = lbConnectionsModule;
-		ruleOne.moduleTo = lbDAOModule;
-		ruleOne.exceptionRules = new RuleDTO[] {};
+		RuleDTO ruleOne = new RuleDTO("IsOnlyAllowedToUse", lbDAOModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, new RuleDTO[] {});
 
-		RuleDTO ruleTwo = new RuleDTO();
-		ruleTwo.ruleTypeKey = "BackCall";
-		// IGNORE FOR ELABORATION VERSION
-		ruleTwo.violationTypeKeys = new String[] { "ExtendsConcrete" };
-		ruleTwo.moduleFrom = infrastructureLayer;
-		ruleTwo.moduleTo = new ModuleDTO();
-		ruleTwo.exceptionRules = new RuleDTO[] {};
+		RuleDTO ruleTwo = new RuleDTO("BackCall", new ModuleDTO(), infrastructureLayer, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
 
 		RuleDTO[] rules = new RuleDTO[] { ruleOne, ruleTwo };
 		return rules;
@@ -280,10 +229,7 @@ public class DefineServiceStubTest {
 	}
 
 	public ApplicationDTO getApplicationDetails() {
-		ApplicationDTO application = new ApplicationDTO();
-		application.name = "Application1";
-		application.paths = new String[] { "c:/Application1/" };
-		application.programmingLanguage = "Java";
+		ApplicationDTO application = new ApplicationDTO("Application1", new String[] { "c:/Application1/" }, "Java", "0.1a");
 		return application;
 	}
 
