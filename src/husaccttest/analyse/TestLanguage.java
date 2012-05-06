@@ -1,14 +1,6 @@
 package husaccttest.analyse;
 
-import husacct.analyse.AnalyseServiceImpl;
-
 public class TestLanguage extends TestCaseExtended{
-
-	private AnalyseServiceImpl service;
-	
-	public void setUp(){
-		service = new AnalyseServiceImpl();
-	}
 	
 	public void testGetAvailableLanguages(){
 		int totalLanguagesExpected = 2;
