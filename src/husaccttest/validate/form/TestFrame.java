@@ -4,7 +4,9 @@
  */
 package husaccttest.validate.form;
 
-import husacct.validate.ValidateServiceImpl;
+import husacct.Main;
+import husacct.ServiceProvider;
+import husacct.validate.IValidateService;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,14 +22,14 @@ public class TestFrame extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = -2212704611368658020L;
 
-	private ValidateServiceImpl impl;
+	private IValidateService impl;
 
 	/**
 	 * Creates new form TestFrame
 	 */
 	public TestFrame() {
-
-		impl = new ValidateServiceImpl();
+		Main.main(new String[]{});
+		impl = ServiceProvider.getInstance().getValidateService();
 		impl.checkConformance();
 		initComponents();
 	}
