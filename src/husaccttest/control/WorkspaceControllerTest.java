@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import husacct.control.domain.Workspace;
-import husacct.control.presentation.workspace.SaveWorkspaceFrame;
 import husacct.control.task.MainController;
 import husacct.control.task.WorkspaceController;
 
