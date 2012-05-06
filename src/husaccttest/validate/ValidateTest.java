@@ -21,10 +21,12 @@ import org.junit.Test;
 public class ValidateTest {
 
 	private ValidateServiceImpl validate;
+	private DefineServiceImpl defineService;
 
 	@Before
 	public void setup()
 	{
+		defineService = new DefineServiceImpl();
 		validate = new ValidateServiceImpl();
 	}
 	@Test
@@ -48,8 +50,8 @@ public class ValidateTest {
 		final String [] currentRuletypes = new String[]{"InterfaceConvention", "SubClassConvention", "IsNotAllowedToUse", "IsOnlyAllowedToUse", "IsOnlyModuleAllowedToUse", "IsAllowedToUse", "MustUse", "SkipCall", "BackCall"};
 		assertArrayEquals(currentRuletypes, getRuleTypesStringArray(dtos));
 
-		DefineServiceImpl defineService = new DefineServiceImpl();	
-		if(defineService.getApplicationDetails().programmingLanguage != null){
+			
+		if(defineService.getApplicationDetails().programmingLanguage != null && !defineService.getApplicationDetails().programmingLanguage.isEmpty()){
 			if(defineService.getApplicationDetails().programmingLanguage.isEmpty()){
 				assertEquals(10, getViolationTypesStringArray(dtos, "IsNotAllowedToUse").length);
 				assertEquals(10, getViolationTypesStringArray(dtos, "IsAllowedToUse").length);
@@ -114,7 +116,6 @@ public class ValidateTest {
 	@Test
 	public void getViolationsByPhysicalPath() {
 		validate.checkConformance();
-
 		assertTrue(listContainsFromValue(validate.getViolationsByPhysicalPath("domain.locationbased.foursquare", "infrastructure.socialmedia.locationbased.foursquare"),"domain.locationbased.foursquare.Account"));
 		assertTrue(listContainsToValue(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"), "infrastructure.socialmedia.locationbased.foursquare.AccountDAO"));
 		assertTrue(listContainsKey(validate.getViolationsByLogicalPath("DomainLayer", "Infrastructure"),"InvocConstructor"));
