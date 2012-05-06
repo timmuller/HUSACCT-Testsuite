@@ -5,8 +5,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ 
-	ControllerTest.class, 
+	LocaleControllerTest.class, 
 	ServiceProviderTest.class,
+	StateControllerTest.class,
+	ImportExportControllerTest.class,
+	WorkspaceControllerTest.class,
 })
 public class ControlTestSuite {
 
