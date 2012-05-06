@@ -9,7 +9,7 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ControllerTest {
+public class LocaleControllerTest {
 
 	ControlServiceImpl service;
 
