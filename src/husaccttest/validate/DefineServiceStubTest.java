@@ -63,10 +63,10 @@ public class DefineServiceStubTest {
 		
 		//ACTUAL RULES
 		//ACTUAL RULES
-		RuleDTO exceptionRule = new RuleDTO("IsAllowedToUse", lbDAOModule, fqConnectionModule, new String[] {"ExtendsConcrete"}, new RuleDTO[]{});
-		RuleDTO ruleOne = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbConnectionsModule, new String[]{"InvocMethod", "InvocConstructor","ExtendsAbstract", "Implements"}, new RuleDTO[]{exceptionRule});
+		RuleDTO exceptionRule = new RuleDTO("IsAllowedToUse", lbDAOModule, fqConnectionModule, new String[] {"ExtendsConcrete"}, "",new RuleDTO[]{});
+		RuleDTO ruleOne = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbConnectionsModule, new String[]{"InvocMethod", "InvocConstructor","ExtendsAbstract", "Implements"}, "",new RuleDTO[]{exceptionRule});
 
-		RuleDTO ruleTwo = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbHistoryModule, new String[] {"ExtendsConcrete"}, new RuleDTO[]{});
+		RuleDTO ruleTwo = new RuleDTO("IsNotAllowedToUse", lbDAOModule, lbHistoryModule, new String[] {"ExtendsConcrete"}, "",new RuleDTO[]{});
 				
 		RuleDTO[] rules = new RuleDTO[]{ruleOne, ruleTwo};
 		return rules;
@@ -134,11 +134,11 @@ public class DefineServiceStubTest {
 
 		// ACTUAL RULES
 		// ACTUAL RULES
-		RuleDTO ruleOne = new RuleDTO("MustUse", lbHistoryModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, new RuleDTO[] {});
+		RuleDTO ruleOne = new RuleDTO("MustUse", lbHistoryModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, "",new RuleDTO[] {});
 
-		RuleDTO ruleTwo = new RuleDTO("IsOnlyModuleAllowedToUse", lbDAOModule, lbHistoryModule, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
+		RuleDTO ruleTwo = new RuleDTO("IsOnlyModuleAllowedToUse", lbDAOModule, lbHistoryModule, new String[] { "ExtendsConcrete" }, "",new RuleDTO[] {});
 
-		RuleDTO ruleThree = new RuleDTO("SkipCall", new ModuleDTO(), domainLayer, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
+		RuleDTO ruleThree = new RuleDTO("SkipCall", new ModuleDTO(), domainLayer, new String[] { "ExtendsConcrete" }, "",new RuleDTO[] {});
 
 		RuleDTO[] rules = new RuleDTO[] { ruleOne, ruleTwo, ruleThree };
 		return rules;
@@ -195,9 +195,9 @@ public class DefineServiceStubTest {
 
 		// ACTUAL RULES
 		// ACTUAL RULES
-		RuleDTO ruleOne = new RuleDTO("IsOnlyAllowedToUse", lbDAOModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, new RuleDTO[] {});
+		RuleDTO ruleOne = new RuleDTO("IsOnlyAllowedToUse", lbDAOModule, lbConnectionsModule, new String[] { "InvocMethod", "InvocConstructor", "ExtendsAbstract", "Implements" }, "",new RuleDTO[] {});
 
-		RuleDTO ruleTwo = new RuleDTO("BackCall", new ModuleDTO(), infrastructureLayer, new String[] { "ExtendsConcrete" }, new RuleDTO[] {});
+		RuleDTO ruleTwo = new RuleDTO("BackCall", new ModuleDTO(), infrastructureLayer, new String[] { "ExtendsConcrete" }, "",new RuleDTO[] {});
 
 		RuleDTO[] rules = new RuleDTO[] { ruleOne, ruleTwo };
 		return rules;
