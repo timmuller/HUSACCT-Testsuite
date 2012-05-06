@@ -40,6 +40,7 @@ public class TestFrame extends javax.swing.JFrame {
 		initComponents();
 	}
 	
+	@SuppressWarnings("unused")
 	private void controlScreen(){
 		Main.main(new String[]{});
 		impl = ServiceProvider.getInstance().getValidateService();
