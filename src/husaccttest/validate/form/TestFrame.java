@@ -7,6 +7,7 @@ package husaccttest.validate.form;
 import husacct.Main;
 import husacct.ServiceProvider;
 import husacct.validate.IValidateService;
+import husacct.validate.ValidateServiceImpl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,10 +29,21 @@ public class TestFrame extends javax.swing.JFrame {
 	 * Creates new form TestFrame
 	 */
 	public TestFrame() {
+		//Choose between the two test options
+		validateScreen();
+//		controlScreen();
+	}
+	
+	private void validateScreen(){
+		impl = new ValidateServiceImpl();
+		impl.checkConformance();
+		initComponents();
+	}
+	
+	private void controlScreen(){
 		Main.main(new String[]{});
 		impl = ServiceProvider.getInstance().getValidateService();
 		impl.checkConformance();
-		initComponents();
 	}
 
 	/**
