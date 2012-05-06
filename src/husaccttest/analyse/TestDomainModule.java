@@ -3,7 +3,6 @@ package husaccttest.analyse;
 import java.util.HashMap;
 import java.util.List;
 
-import husacct.analyse.AnalyseServiceImpl;
 import husacct.common.dto.AnalysedModuleDTO;
 
 public class TestDomainModule extends TestCaseExtended{

@@ -2,7 +2,6 @@ package husaccttest.analyse;
 
 import java.util.HashMap;
 
-import husacct.analyse.AnalyseServiceImpl;
 import husacct.common.dto.DependencyDTO;
 
 public class TestDependencyFilters extends TestCaseExtended{
