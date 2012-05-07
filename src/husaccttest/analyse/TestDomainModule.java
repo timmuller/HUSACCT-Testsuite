@@ -16,12 +16,12 @@ public class TestDomainModule extends TestCaseExtended{
 		String domainNameExpected = "domain";
 		String domainUniqueNameExpected = "domain";
 		int domainSubmoduleCount = 0;
-		String domainTypeExpected = "package";
+		String domainTypeExpected = super.PACKAGE;
 		
 		String infrastructureNameExpected = "infrastructure";
 		String infrastructureUniqueNameExpected = "infrastructure";
 		int infrastructureSubmoduleCount = 0;
-		String infrastructureTypeExpected = "package";
+		String infrastructureTypeExpected = super.PACKAGE;
 		
 		HashMap<String, Object> domainExpectedModule = createModuleHashmap(
 				domainNameExpected, domainUniqueNameExpected, domainSubmoduleCount, domainTypeExpected);
@@ -45,12 +45,12 @@ public class TestDomainModule extends TestCaseExtended{
 		String foursquareNameExpected = "foursquare";
 		String foursquareUniqueNameExpected = modulesFrom + ".foursquare";
 		int foursquareSubmodulesExpected = 0;
-		String foursquareTypeExpected = "package";
+		String foursquareTypeExpected = super.PACKAGE;
 		
 		String latitudeNameExpected = "latitude";
 		String latitudeUniqueNameExpected = modulesFrom + ".latitude";
 		int latitudeSubmodulesExpected = 0;
-		String latitudeTypeExpected = "package";
+		String latitudeTypeExpected = super.PACKAGE;
 		
 		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
 				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
@@ -90,12 +90,12 @@ public class TestDomainModule extends TestCaseExtended{
 		String foursquareNameExpected = "foursquare";
 		String foursquareUniqueNameExpected = modulesFrom + "." + foursquareNameExpected;
 		int foursquareSubmodulesExpected = 0;
-		String foursquareTypeExpected = "package";
+		String foursquareTypeExpected = super.PACKAGE;
 		
 		String latitudeNameExpected = "latitude";
 		String latitudeUniqueNameExpected = modulesFrom + "." + latitudeNameExpected;
 		int latitudeSubmodulesExpected = 0;
-		String latitudeTypeExpected = "package";
+		String latitudeTypeExpected = super.PACKAGE;
 		
 		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
 				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
@@ -120,12 +120,12 @@ public class TestDomainModule extends TestCaseExtended{
 		String foursquareNameExpected = "foursquare";
 		String foursquareUniqueNameExpected = modulesFrom + "." + foursquareNameExpected;
 		int foursquareSubmodulesExpected = 4;
-		String foursquareTypeExpected = "package";
+		String foursquareTypeExpected = super.PACKAGE;
 		
 		String latitudeNameExpected = "latitude";
 		String latitudeUniqueNameExpected = modulesFrom + "." + latitudeNameExpected;
 		int latitudeSubmodulesExpected = 3;
-		String latitudeTypeExpected = "package";
+		String latitudeTypeExpected = super.PACKAGE;
 		
 		HashMap<String, Object> foursquareExpectedModule = createModuleHashmap(
 				foursquareNameExpected, foursquareUniqueNameExpected, foursquareSubmodulesExpected, foursquareTypeExpected);
@@ -150,7 +150,7 @@ public class TestDomainModule extends TestCaseExtended{
 		String locationbasedNameExpected = "locationbased";
 		String locationbasedUniqueNameExpected = modulesFrom + "." + locationbasedNameExpected;
 		int locationbasedSubmodulesExpected = 0;
-		String locationbasedTypeExpected = "package";
+		String locationbasedTypeExpected = super.PACKAGE;
 		
 		HashMap<String, Object> locationbasedExpectedModule = createModuleHashmap(
 				locationbasedNameExpected, locationbasedUniqueNameExpected, locationbasedSubmodulesExpected, locationbasedTypeExpected);
@@ -216,7 +216,7 @@ public class TestDomainModule extends TestCaseExtended{
 		String nameExpected = "domain";
 		String uniqueNameExpected = "domain";
 		int submoduleExpected = 0;
-		String typeExpected = "package";
+		String typeExpected = super.PACKAGE;
 		
 		assertEquals(nameExpected, module.name);
 		assertEquals(uniqueNameExpected, module.uniqueName);
@@ -259,7 +259,7 @@ public class TestDomainModule extends TestCaseExtended{
 		String nameExpected = "foursquare";
 		String uniquenameExpected = "domain.locationbased.foursquare";
 		int totalSubmodulesExpected = 0;
-		String typeExpected = "package";
+		String typeExpected = super.PACKAGE;
 		
 		assertEquals(nameExpected, parentModule.name);
 		assertEquals(uniquenameExpected, parentModule.uniqueName);

@@ -16,7 +16,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String fromPathExpected = fromPath;
 		String toPathExpected = toPath;
-		String typeExpected = "extendsConcrete";
+		String typeExpected = super.EXTENDSCONCRETE;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
@@ -35,17 +35,17 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String accountFromPathExpected = fromPath + ".Account";
 		String accountToPathExpected = toPath + ".AccountDAO";
-		String accountTypeExpected = "declaration";
+		String accountTypeExpected = super.DECLARATION;
 		int accountLinenumberExpected = 10;
 		
 		String friendsFromPathExpected = fromPath +".Friends";
 		String friendsToPathExpected = toPath + ".FriendsDAO";
-		String friendsTypeExpected = "extendsAbstract";
+		String friendsTypeExpected = super.EXTENDSABSTRACT;
 		int friendsLinenumberExpected = 10;
 
 		String mapFromPathExpected = fromPath + ".Map";
 		String mapToPathExpected = toPath + ".IMap";
-		String mapTypeExpected = "implements";
+		String mapTypeExpected = super.IMPLEMENTS;
 		int mapLinenumberExpected = 10;
 		
 		HashMap<String, Object> expectedAccountDependency = createDependencyHashmap (
@@ -73,7 +73,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String fromPathExpected = fromPath + ".Map";
 		String toPathExpected = toPath;
-		String typeExpected = "implements";
+		String typeExpected = super.IMPLEMENTS;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
@@ -110,7 +110,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String fromPathExpected = fromPath;
 		String toPathExpected = "infrastructure.socialmedia.locationbased.foursquare.AccountDAO";
-		String typeExpected = "declaration";
+		String typeExpected = super.DECLARATION;
 		int linenumberExpected = 11;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
@@ -127,7 +127,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String fromExpected = "domain.locationbased.foursquare.Account";
 		String toExpected = toPath;
-		String typeExpected = "declaration";
+		String typeExpected = super.DECLARATION;
 		int lineExpected = 11;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
@@ -145,17 +145,17 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String accountFromExpected = "domain.locationbased.latitude.Account";
 		String accountToExpected = toPath + ".AccountDAO";
-		String accountTypeExpected = "declaration";
+		String accountTypeExpected = super.DECLARATION;
 		int accountLineExpected = 10;
 		
 		String friendsFromExpected = "domain.locationbased.latitude.Friends";
 		String friendsToExpected = toPath + ".FriendsDAO";
-		String friendsTypeExpected = "extends";
+		String friendsTypeExpected = super.EXTENDS;
 		int friendsLineExpected = 10;
 		
 		String mapFromExpected  = "domain.locationbased.latitude.Map";
 		String mapToExpected = toPath + ".IMap";
-		String mapTypeExpected = "implements";
+		String mapTypeExpected = super.IMPLEMENTS;
 		int mapLineExpected = 10;
 		
 		HashMap<String, Object> accountDependency = createDependencyHashmap(accountFromExpected, accountToExpected, accountTypeExpected, accountLineExpected);
@@ -188,17 +188,17 @@ public class TestDomainDependencies extends TestCaseExtended{
 		
 		String accountFromPathExpected = fromPath + ".Account";
 		String accountToPathExpected = "infrastructure.socialmedia.locationbased.latitude.AccountDAO";
-		String accountTypeExpected = "declaration";
+		String accountTypeExpected = super.DECLARATION;
 		int accountLinenumberExpected = 10;
 		
 		String friendsFromPathExpected = fromPath + ".Friends";
 		String friendsToPathExpected = "infrastructure.socialmedia.locationbased.latitude.FriendsDAO";
-		String friendsTypeExpected = "extends";
+		String friendsTypeExpected = super.EXTENDS;
 		int friendsLinenumberExpected = 10;
 		
 		String mapFromPathExpected = fromPath + ".Map";
 		String mapToPathExpected = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String mapTypeExpected = "implements";
+		String mapTypeExpected = super.IMPLEMENTS;
 		int mapLinenumberExpected = 10;
 		
 		

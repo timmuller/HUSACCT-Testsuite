@@ -10,7 +10,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void testGetDependenciesBetweenClassTypeExtends(){
 		String from = "domain.locationbased.foursquare.History";
 		String to = "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int dependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
@@ -30,7 +30,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void testGetDependenciesBetweenPackageTypeExtends(){
 		String from = "domain.locationbased.foursquare";
 		String to = "infrastructure.socialmedia.locationbased.foursquare";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int dependenciesExpected = 3;
 		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
@@ -70,7 +70,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void testGetDependenciesBetweenPackageTypeExtendsAndInvocConstructor(){
 		String from = "domain.locationbased.foursquare";
 		String to = "infrastructure.socialmedia.locationbased.foursquare";
-		String[] dependencyFilter = {"extends", "declaration"};
+		String[] dependencyFilter = {super.EXTENDS, super.DECLARATION};
 		int dependenciesExpected = 4;
 		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
@@ -120,7 +120,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void testGetDependenciesFilterWithoutResults(){
 		String from = "domain.locationbased.foursquare";
 		String to = "infrastructure.socialmedia.locationbased.foursquare";
-		String[] dependencyFilter = {"Implements"};
+		String[] dependencyFilter = {super.IMPLEMENTS};
 		int dependenciesExpected = 0;
 		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
@@ -130,7 +130,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	public void testGetDependenciesFilterWithNotExistingPackage(){
 		String from = "domain.notExisting";
 		String to = "infrastructure.socialmedia.locationbased.foursquare";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int dependenciesExpected = 0;
 		
 		DependencyDTO[] dependencies = service.getDependencies(from, to, dependencyFilter);
@@ -139,7 +139,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesFromClassTypeImplements(){
 		String from = "domain.locationbased.latitude.Map";
-		String[] dependencyFilter = {"implements"};
+		String[] dependencyFilter = {super.IMPLEMENTS};
 		int dependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -147,7 +147,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String fromExpected = from;
 		String toExpected = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String typeExpected = "implements";
+		String typeExpected = super.IMPLEMENTS;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> dependencyExpected = createDependencyHashmap(
@@ -158,7 +158,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesFromPackageTypeExtends(){
 		String from = "domain.locationbased.latitude";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int dependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -166,7 +166,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String fromExpected = from + ".Friends";
 		String toExpected = "infrastructure.socialmedia.locationbased.latitude.FriendsDAO";
-		String typeExpected = "extends";
+		String typeExpected = super.EXTENDS;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> dependencyExpected = createDependencyHashmap(
@@ -177,7 +177,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesFromPackageTypesExtendsANDInvocConstructor(){
 		String from = "domain.locationbased.latitude";
-		String[] dependencyFilter = {"extends", "declaration"};
+		String[] dependencyFilter = {super.EXTENDS, super.DECLARATION};
 		int expectedDependencies = 2;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -185,12 +185,12 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String friendsFromExpected = from + ".Friends";
 		String friendsToExpeceted = "infrastructure.socialmedia.locationbased.latitude.FriendsDAO";
-		String friendsTypeExpected = "extends";
+		String friendsTypeExpected = super.EXTENDS;
 		int friendsLinenumberExpected = 10;
 		
 		String accountFromExpected = from + ".Account";
 		String accountToExpected = "infrastructure.socialmedia.locationbased.latitude.AccountDAO";
-		String accountTypeExpected = "declaration";
+		String accountTypeExpected = super.DECLARATION;
 		int accountLinenumberExpected = 10;
 		
 		HashMap<String, Object> friendDependencyExpected = createDependencyHashmap(friendsFromExpected, friendsToExpeceted, friendsTypeExpected, friendsLinenumberExpected);
@@ -205,7 +205,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesFromNoResultsWithFilter(){
 		String from = "domain.locationbased.latitude";
-		String[] dependencyFilter = {"Abstraction"};
+		String[] dependencyFilter = {super.EXTENDSABSTRACT};
 		int dependenciesExpected = 0;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -214,7 +214,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesFromNotExistingPackage(){
 		String from = "domain.notExisting";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int expectedDependencies = 0;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -223,7 +223,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 	public void testGetDependenciesToClassTypeImplements(){
 		String to = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		String[] dependencyFilter = {"Implements"};
+		String[] dependencyFilter = {super.IMPLEMENTS};
 		int dependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependenciesTo(to, dependencyFilter);
@@ -231,7 +231,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String fromExpected = "domain.locationbased.latitude.Map";
 		String toExpected = to;
-		String typeExpected = "implements";
+		String typeExpected = super.IMPLEMENTS;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> dependencyExpected = createDependencyHashmap(
@@ -242,7 +242,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesToPackageTypeExtends(){
 		String to = "infrastructure.socialmedia.locationbased.latitude";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int dependenciesExpected = 1;
 		
 		DependencyDTO[] dependencies = service.getDependenciesTo(to, dependencyFilter);
@@ -250,7 +250,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String fromExpected = "domain.locationbased.latitude.Friends";
 		String toExpected = to + ".FriendsDAO";
-		String typeExpected = "extends";
+		String typeExpected = super.EXTENDS;
 		int linenumberExpected = 10;
 		
 		HashMap<String, Object> dependencyExpected = createDependencyHashmap(
@@ -261,7 +261,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesToPackageTypesExtendsANDInvocConstructor(){
 		String to = "infrastructure.socialmedia.locationbased.latitude";
-		String[] dependencyFilter = {"extends", "declaration"};
+		String[] dependencyFilter = {super.EXTENDS, super.DECLARATION};
 		int expectedDependencies = 2;
 		
 		DependencyDTO[] dependencies = service.getDependenciesTo(to, dependencyFilter);
@@ -269,12 +269,12 @@ public class TestDependencyFilters extends TestCaseExtended{
 		
 		String friendsFromExpected = "domain.locationbased.latitude.Friends";
 		String friendsToExpeceted = to + ".FriendsDAO";
-		String friendsTypeExpected = "extends";
+		String friendsTypeExpected = super.EXTENDS;
 		int friendsLinenumberExpected = 10;
 		
 		String accountFromExpected = "domain.locationbased.latitude.Account";
 		String accountToExpected = to + ".AccountDAO";
-		String accountTypeExpected = "declaration";
+		String accountTypeExpected = super.DECLARATION;
 		int accountLinenumberExpected = 10;
 		
 		HashMap<String, Object> friendDependencyExpected = createDependencyHashmap(friendsFromExpected, friendsToExpeceted, friendsTypeExpected, friendsLinenumberExpected);
@@ -289,7 +289,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesToNoResultsWithFilter(){
 		String from = "domain.locationbased.latitude";
-		String[] dependencyFilter = {"Abstraction"};
+		String[] dependencyFilter = {super.EXTENDSABSTRACT};
 		int dependenciesExpected = 0;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);
@@ -298,7 +298,7 @@ public class TestDependencyFilters extends TestCaseExtended{
 	
 	public void testGetDependenciesToNotExistingPackage(){
 		String from = "domain.notExisting";
-		String[] dependencyFilter = {"extends"};
+		String[] dependencyFilter = {super.EXTENDS};
 		int expectedDependencies = 0;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(from, dependencyFilter);

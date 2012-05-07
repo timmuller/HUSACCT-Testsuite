@@ -12,12 +12,16 @@ import junit.framework.TestCase;
 
 public abstract class TestCaseExtended extends TestCase{
 	
-	final String DECLARATION = "declaration";
-	final String EXTENDSCONCRETE = "extendsConcrete";
-	final String EXTENDSABSTRACT = "extendsAbstract";
-	final String IMPLEMENTS = "implements";
-	final String IMPORT = "import";
-	final String EXCEPTION = "exception";
+	public String DECLARATION = "declaration";
+	public String EXTENDS = "extends";
+	public String EXTENDSCONCRETE = "extendsConcrete";
+	public String EXTENDSABSTRACT = "extendsAbstract";
+	public String IMPLEMENTS = "implements";
+	public String IMPORT = "import";
+	public String EXCEPTION = "exception";
+	
+	public String CLASS = "class";
+	public String PACKAGE = "package";
 
 	protected AnalyseServiceImpl service;
 	private ModelCreationService famix;

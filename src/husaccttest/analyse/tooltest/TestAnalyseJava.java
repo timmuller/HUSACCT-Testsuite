@@ -1,10 +1,11 @@
-package husaccttest.analyse;
+package husaccttest.analyse.tooltest;
 
 import husacct.ServiceProvider;
 import husacct.analyse.IAnalyseService;
 import husacct.common.dto.AnalysedModuleDTO;
 import husacct.common.dto.DependencyDTO;
 import husacct.define.IDefineService;
+import husaccttest.analyse.TestCaseExtended;
 
 
 
