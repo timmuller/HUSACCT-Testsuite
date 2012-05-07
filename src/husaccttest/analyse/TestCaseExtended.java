@@ -12,6 +12,12 @@ import junit.framework.TestCase;
 
 public abstract class TestCaseExtended extends TestCase{
 	
+	final String DECLARATION = "declaration";
+	final String EXTENDSCONCRETE = "extendsConcrete";
+	final String EXTENDSABSTRACT = "extendsAbstract";
+	final String IMPLEMENTS = "implements";
+	final String IMPORT = "import";
+	final String EXCEPTION = "exception";
 
 	protected AnalyseServiceImpl service;
 	private ModelCreationService famix;
@@ -81,7 +87,7 @@ public abstract class TestCaseExtended extends TestCase{
 					Object checkingObject = (Object) findingProperties.get(currentKey);
 					Object checkingObjectValue = checkingObject.toString();
 					
-					System.out.println(objectPropertyField.getName()+ " - " + objectPropertyFieldValue.toString() + " - " + checkingObjectValue.toString());
+					//System.out.println(objectPropertyField.getName()+ " - " + objectPropertyFieldValue.toString() + " - " + checkingObjectValue.toString());
 					
 					if(!objectPropertyFieldValue.toString().equals(checkingObjectValue.toString())){
 						continue dependencyloop;
