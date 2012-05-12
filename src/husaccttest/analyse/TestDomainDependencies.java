@@ -9,7 +9,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 	public void testGetDependencyFromAndToClasses(){
 		String fromPath = "domain.locationbased.foursquare.History";
 		String toPath = "infrastructure.socialmedia.locationbased.foursquare.HistoryDAO";
-		int totalDependenciesExpected = 1;
+		int totalDependenciesExpected = 2;
 		
 		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
@@ -19,24 +19,34 @@ public class TestDomainDependencies extends TestCaseExtended{
 		String typeExpected = super.EXTENDSCONCRETE;
 		int linenumberExpected = 10;
 		
+		String fromImportPathExpected = fromPath;
+		String toImportPathExpected = toPath;
+		String typeImportExpected = super.IMPORT;
+		int linenumberImportExpected = 3;
+		
+		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
 				fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
+		HashMap<String, Object> expectedImportDependency = createDependencyHashmap(
+				fromImportPathExpected, toImportPathExpected, typeImportExpected, linenumberImportExpected);
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
+		boolean foundImport = compaireDTOWithValues(expectedImportDependency, dependencies);
 		assertEquals(true, foundDependency);
+		assertEquals(true, foundImport);
 	}
 	
 	public void testGetDependenciesFromAndToPackages(){
 		String fromPath = "domain.locationbased.latitude";
 		String toPath = "infrastructure.socialmedia.locationbased.latitude";
-		int totalDependenciesExpected = 3;
+		int totalDependenciesExpected = 6;
 		
 		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
 		String accountFromPathExpected = fromPath + ".Account";
 		String accountToPathExpected = toPath + ".AccountDAO";
-		String accountTypeExpected = super.DECLARATION;
-		int accountLinenumberExpected = 10;
+		String accountTypeExpected = super.INVOCCONSTRUCTOR;
+		int accountLinenumberExpected = 11;
 		
 		String friendsFromPathExpected = fromPath +".Friends";
 		String friendsToPathExpected = toPath + ".FriendsDAO";
@@ -66,7 +76,7 @@ public class TestDomainDependencies extends TestCaseExtended{
 	public void testGetDependenciesFromPackageToClass(){
 		String fromPath = "domain.locationbased.latitude";
 		String toPath = "infrastructure.socialmedia.locationbased.latitude.IMap";
-		int totalDependenciesExpected = 1;
+		int totalDependenciesExpected = 2;
 		
 		DependencyDTO[] dependencies = service.getDependencies(fromPath, toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
@@ -76,9 +86,18 @@ public class TestDomainDependencies extends TestCaseExtended{
 		String typeExpected = super.IMPLEMENTS;
 		int linenumberExpected = 10;
 		
-		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
+		String fromImportPathExpected = fromPath + ".Map";
+		String toImportPathExpected = toPath;
+		String typeImportExpected = super.IMPORT;
+		int linenumberImportExpected = 3;
+		
+		HashMap<String, Object> expectedDependency = createDependencyHashmap(
+				fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
+		HashMap<String, Object> expectedImportDependency = createDependencyHashmap(fromImportPathExpected, toImportPathExpected, typeImportExpected, linenumberImportExpected);
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
-		assertEquals(true, foundDependency);		
+		boolean foundImportDependency = compaireDTOWithValues(expectedImportDependency, dependencies);
+		assertEquals(true, foundDependency);
+		assertEquals(true, foundImportDependency);
 	}
 	
 	public void testGetDependenciesFromAndToWithoutRelation(){
@@ -103,15 +122,15 @@ public class TestDomainDependencies extends TestCaseExtended{
 	
 	public void testGetAllDependenciesOfClass(){
 		String fromPath = "domain.locationbased.foursquare.Account";
-		int totalDependencies = 1;
+		int totalDependencies = 2;
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(fromPath);
 		assertEquals(totalDependencies, dependencies.length);
 		
 		String fromPathExpected = fromPath;
 		String toPathExpected = "infrastructure.socialmedia.locationbased.foursquare.AccountDAO";
-		String typeExpected = super.DECLARATION;
-		int linenumberExpected = 11;
+		String typeExpected = super.INVOCCONSTRUCTOR;
+		int linenumberExpected = 10;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(fromPathExpected, toPathExpected, typeExpected, linenumberExpected);
 		boolean foundDependency = compaireDTOWithValues(expectedDependency, dependencies);
@@ -120,15 +139,15 @@ public class TestDomainDependencies extends TestCaseExtended{
 	
 	public void testGetDependenciesToClass(){
 		String toPath = "infrastructure.socialmedia.locationbased.foursquare.AccountDAO";
-		int totalDependencies = 1;
+		int totalDependencies = 2;
 		
 		DependencyDTO[] dependencies = service.getDependenciesTo(toPath);
 		assertEquals(totalDependencies, dependencies.length);
 		
 		String fromExpected = "domain.locationbased.foursquare.Account";
 		String toExpected = toPath;
-		String typeExpected = super.DECLARATION;
-		int lineExpected = 11;
+		String typeExpected = super.INVOCCONSTRUCTOR;
+		int lineExpected = 10;
 		
 		HashMap<String, Object> expectedDependency = createDependencyHashmap(
 				fromExpected, toExpected, typeExpected, lineExpected);
@@ -138,19 +157,19 @@ public class TestDomainDependencies extends TestCaseExtended{
 	
 	public void testGetDependenciesToPackage(){
 		String toPath = "infrastructure.socialmedia.locationbased.latitude";
-		int totalDependenciesExpected = 3;
+		int totalDependenciesExpected = 6;
 				
 		DependencyDTO[] dependencies = service.getDependenciesTo(toPath);
 		assertEquals(totalDependenciesExpected, dependencies.length);
 		
 		String accountFromExpected = "domain.locationbased.latitude.Account";
 		String accountToExpected = toPath + ".AccountDAO";
-		String accountTypeExpected = super.DECLARATION;
-		int accountLineExpected = 10;
+		String accountTypeExpected = super.INVOCCONSTRUCTOR;
+		int accountLineExpected = 11;
 		
 		String friendsFromExpected = "domain.locationbased.latitude.Friends";
 		String friendsToExpected = toPath + ".FriendsDAO";
-		String friendsTypeExpected = super.EXTENDS;
+		String friendsTypeExpected = super.EXTENDSABSTRACT;
 		int friendsLineExpected = 10;
 		
 		String mapFromExpected  = "domain.locationbased.latitude.Map";
@@ -181,19 +200,19 @@ public class TestDomainDependencies extends TestCaseExtended{
 	
 	public void testGetAllDependenciesOfPackage(){
 		String fromPath = "domain.locationbased.latitude";
-		int totalDependencies = 3;		
+		int totalDependencies = 6;		
 		
 		DependencyDTO[] dependencies = service.getDependenciesFrom(fromPath);
 		assertEquals(totalDependencies, dependencies.length);
 		
 		String accountFromPathExpected = fromPath + ".Account";
 		String accountToPathExpected = "infrastructure.socialmedia.locationbased.latitude.AccountDAO";
-		String accountTypeExpected = super.DECLARATION;
-		int accountLinenumberExpected = 10;
+		String accountTypeExpected = super.INVOCCONSTRUCTOR;
+		int accountLinenumberExpected = 11;
 		
 		String friendsFromPathExpected = fromPath + ".Friends";
 		String friendsToPathExpected = "infrastructure.socialmedia.locationbased.latitude.FriendsDAO";
-		String friendsTypeExpected = super.EXTENDS;
+		String friendsTypeExpected = super.EXTENDSABSTRACT;
 		int friendsLinenumberExpected = 10;
 		
 		String mapFromPathExpected = fromPath + ".Map";
