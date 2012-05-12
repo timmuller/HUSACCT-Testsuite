@@ -3,6 +3,7 @@ package husaccttest.analyse;
 import husacct.analyse.AnalyseServiceImpl;
 import husacct.analyse.domain.ModelCreationService;
 import husacct.analyse.domain.famix.FamixCreationServiceImpl;
+import husacct.common.dto.AnalysedModuleDTO;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public abstract class TestCaseExtended extends TestCase{
 	public String EXCEPTION = "exception";
 	
 	public String CLASS = "class";
+	public String INTERFACE = "interface";
 	public String PACKAGE = "package";
 
 	protected AnalyseServiceImpl service;
@@ -106,6 +108,28 @@ public abstract class TestCaseExtended extends TestCase{
 		}		
 		return false;
 	}	
+	
+	public boolean foundModulesNames(String[] search, AnalysedModuleDTO[] moduleList){
+		nextSearch : for(String s : search){
+			for(AnalysedModuleDTO d : moduleList){
+				if(d.name.equals(s)){
+					continue nextSearch;
+				}
+			}
+			assertTrue(s + " not found", false);
+			return false;
+		}
+		return true;
+	}
+	
+	public AnalysedModuleDTO getModuleByName(String name, AnalysedModuleDTO[] modulelist){
+		for(AnalysedModuleDTO d : modulelist){
+			if(d.name.equals(name)){
+				return d;
+			}
+		}
+		return null;
+	}
 	
 	private void fillFamixAsStub(){
 		famix.createPackage("domain", "", "domain");
